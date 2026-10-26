@@ -23,7 +23,7 @@
 %--------------------------------------------
 % Variáveis para preencher com os seus dados
 %--------------------------------------------
-    \title{Protótipo para converter fórmulas de planilha com condicionais aninhadas em Python}
+    \title{Modernização de sistemas legados low-code: extração de regras de negócio do Power Apps e refatoração para Python com LLMs}
     \subtitle{}
     \author{Anna Beatriz Resende Oki Corrêa}
     \cidade{Brasília}
@@ -156,10 +156,10 @@ Nelson Mandela
 % -------------------------------
 \newpage
 \begin{resumo2}
-Profissionais de tecnologia precisam, com frequência, passar uma mesma regra de uma representação para outra, como de uma fórmula de planilha para um código. Quando a fórmula tem condições aninhadas, a lógica fica escondida e é fácil esquecer uma condição. Este trabalho propõe um protótipo que converte fórmulas de planilha com condições aninhadas em código Python e mostra a lógica em forma de fluxograma. A lógica da fórmula é organizada em uma árvore de condições, da qual saem o código e o fluxograma. A avaliação compara o resultado da fórmula com o do código em casos de teste e reúne a opinião de um profissional sobre a utilidade do fluxograma. O trabalho está em andamento: o problema, a proposta e o plano de avaliação estão definidos, e o desenvolvimento do protótipo será a próxima etapa.
+Plataformas \textit{low-code}, como o Microsoft Power Apps, aceleram a construção de aplicações corporativas, mas acoplam regras de negócio complexas, escritas em Power Fx, diretamente aos componentes de interface. Esse modelo gera débito técnico: a lógica fica dispersa, pouco documentada e não pode ser verificada por testes unitários, o que torna essas aplicações legadas desde a sua criação. As estratégias tradicionais de modernização, a reescrita total e a terceirização, envolvem alto custo e risco de perda das regras de negócio. Este trabalho investiga o uso de Grandes Modelos de Linguagem (LLMs) para realizar a engenharia reversa de fórmulas Power Fx, documentar as regras extraídas e refatorá-las para um \textit{backend} desacoplado em Python, verificável por testes unitários. A pesquisa é conduzida como estudo de caso exploratório sobre o sistema \textit{Eventos}, aplicando um \textit{pipeline} de engenharia de \textit{prompt} em três etapas: documentação semântica, tradução para Python e geração de testes em Pytest. A avaliação combina testes de equivalência funcional, que comparam o comportamento do sistema original com o da versão em Python, e validação qualitativa com \textit{stakeholders} da empresa. O trabalho está em andamento: a fundamentação teórica e o método estão definidos, e a execução do experimento será a próxima etapa.
 
 \vspace*{20pt}
-\textbf{Palavras-chave:} lógica computacional; fórmulas de planilha; conversão de código; fluxograma; Python.
+\textbf{Palavras-chave:} sistemas legados; \textit{low-code}; Power Apps; refatoração; grandes modelos de linguagem; Python.
 \end{resumo2}
 
 
@@ -168,10 +168,10 @@ Profissionais de tecnologia precisam, com frequência, passar uma mesma regra de
 % -------------------------------
 \newpage
 \begin{abstract}
-Technology professionals often need to move the same rule from one representation to another, such as from a spreadsheet formula to code. When a formula has nested conditions, the logic is hidden and it is easy to miss a condition. This work proposes a prototype that converts spreadsheet formulas with nested conditions into Python code and shows the logic as a flowchart. The formula's logic is organized as a tree of conditions, from which the code and the flowchart are generated. The evaluation compares the formula's result with the code's result on test cases and collects a professional's opinion on the usefulness of the flowchart. The work is in progress: the problem, the proposal and the evaluation plan are defined, and the prototype development is the next step.
+Low-code platforms such as Microsoft Power Apps speed up the construction of corporate applications, but they couple complex business rules, written in Power Fx, directly to user interface components. This model creates technical debt: the logic is scattered, poorly documented and cannot be verified by unit tests, which makes these applications legacy from the moment they are created. Traditional modernization strategies, full rewrites and outsourcing, involve high costs and the risk of losing business rules. This work investigates the use of Large Language Models (LLMs) to reverse engineer Power Fx formulas, document the extracted rules and refactor them into a decoupled Python backend that can be verified by unit tests. The research is conducted as an exploratory case study of the \textit{Eventos} system, applying a three-stage prompt engineering pipeline: semantic documentation, translation to Python and test generation with Pytest. The evaluation combines functional equivalence tests, which compare the behavior of the original system with that of the Python version, and a qualitative validation with company stakeholders. The work is in progress: the theoretical background and the method are defined, and running the experiment is the next step.
 
 \vspace*{20pt}
-\textbf{Keywords:} computational logic; spreadsheet formulas; code conversion; flowchart; Python.
+\textbf{Keywords:} legacy systems; low-code; Power Apps; refactoring; large language models; Python.
 \end{abstract}
 
 
@@ -202,13 +202,15 @@ Technology professionals often need to move the same rule from one representatio
 \input{capitulos/cap1_introducao}
 
 \chapter{Fundamentação Teórica}
-\input{capitulos/cap2_logica}
-\input{capitulos/cap2_programacao_visual}
+\label{cap:fundamentacao}
+\input{capitulos/cap2_fundamentacao}
 
-\chapter{Proposta do Protótipo}
+\chapter{Metodologia}
+\label{cap:metodologia}
 \input{capitulos/proposta}
 
-\chapter{Considerações Finais}
+\chapter{Resultados e Considerações Finais}
+\label{cap:resultados}
 \input{capitulos/consideracoes_finais}
     
 
