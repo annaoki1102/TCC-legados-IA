@@ -1,14 +1,14 @@
-# Protótipo para atualizar sistemas legados por meio de agentes de IA em desenvolvimento (TCC de Sistemas de Informação, UDF)
+# Desafios da modernização de sistemas legados com agentes de IA no desenvolvimento de software
 
 **Autora:** Anna Beatriz Resende Oki Corrêa
 
 ## Resumo
 
-Fórmulas de planilha com várias funções `SE` aninhadas escondem a lógica da regra, e é fácil esquecer uma condição ao passá-la para outro formato. Este trabalho propõe um protótipo que lê a fórmula, organiza a lógica em uma árvore de condições e, a partir dela, gera o código Python e um fluxograma. A avaliação usa casos de teste que comparam o resultado da fórmula com o do código gerado e reúne a opinião de um profissional sobre a utilidade do fluxograma.
+Sistemas legados guardam regras de negócio importantes, mas usam tecnologias antigas e são caros de manter. Agentes de IA para o desenvolvimento, como o Claude Code, podem ajudar a modernizá-los, mas os estudos mostram limites: o desempenho cai em projetos grandes e parte das regras do sistema pode deixar de ser migrada. Este trabalho busca responder quais são os desafios para converter e atualizar sistemas legados para novas tecnologias por meio de agentes de IA, do ponto de vista do desenvolvimento.
 
 ## Situação atual
 
-O texto do TCC está em andamento. O protótipo ainda não foi desenvolvido.
+O texto do TCC está em andamento.
 
 ## Onde está cada coisa
 
@@ -16,8 +16,8 @@ O texto do TCC está em andamento. O protótipo ainda não foi desenvolvido.
 |------------------|-----------|
 | `TCC.tex` | Versão atual do TCC: arquivo principal, que junta todos os capítulos. |
 | `capitulos/cap1_introducao.tex` | Introdução: problema, objetivos e metodologia. |
-| `capitulos/cap2_*.tex` | Fundamentação teórica. |
-| `capitulos/proposta.tex` | Proposta do protótipo e plano de avaliação. |
+| `capitulos/cap2_*.tex` | Fundamentação teórica: sistemas legados, agentes de IA, verificação e desafios. |
+| `capitulos/proposta.tex` | Proposta e plano de avaliação. |
 | `capitulos/consideracoes_finais.tex` | Considerações finais. |
 | `TCC.bib` | Referências bibliográficas (BibTeX). |
 | `images/` | Figuras usadas no texto. |

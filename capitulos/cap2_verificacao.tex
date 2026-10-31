@@ -1,0 +1,9 @@
+\section{Conversão de código e verificação}
+
+Converter código não é só trocar a sintaxe. O código novo precisa fazer a mesma coisa que o antigo. Isso é chamado de equivalência funcional.
+
+Por isso, \citeonline{pan2024lost} consideram uma tradução correta só quando o código compila, roda e passa nos testes. Compilar não basta, porque um código pode compilar e mesmo assim se comportar de forma diferente.
+
+Os testes também têm limites. Se o sistema tem poucos testes, erros passam sem ser vistos. Por isso, o \citeonline{may2025freshbrew} escolheu projetos com alta cobertura de testes e exige que a cobertura não caia mais de 5 pontos percentuais depois da migração. Já o \citeonline{li2026repomod} esconde os testes do agente, para que ele não os use como atalho.
+
+Outra forma de avaliar é pedir para outro modelo de linguagem julgar o resultado. A IBM usou esse método para medir a qualidade do código Java gerado \cite{chakaravarthy2026cobol}. Mas, no estudo de \citeonline{diggs2024leveraging}, as métricas automáticas tiveram pouca relação com a nota dada por pessoas, e por isso os autores indicam a avaliação humana. Neste trabalho, a verificação principal será feita com testes.

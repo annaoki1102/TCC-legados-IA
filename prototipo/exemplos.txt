@@ -1,0 +1,3 @@
+=SE(A1>10; "alto"; SE(A1>5; "médio"; "baixo"))
+=SE(E(A1>=18; B1="sim"); "aprovado"; SE(A1>=18; "pendente"; "menor"))
+=SE(OU(A1<0; A1>100); "inválido"; SE(A1>=70; "aprovado"; SE(A1>=50; "recuperação"; "reprovado")))

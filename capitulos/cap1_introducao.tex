@@ -1,31 +1,47 @@
-Sistemas de software que permanecem em uso precisam evoluir continuamente para acompanhar mudanças nas regras de negócio, na legislação e no ambiente tecnológico em que operam. \citeonline{sommerville2011engenharia} observa que, em grande parte das organizações, os custos de manutenção e evolução superam os custos de desenvolvimento inicial, e que sistemas legados tendem a concentrar conhecimento de negócio que não está registrado em nenhum outro lugar. Um sistema torna-se legado, portanto, não apenas por sua idade, mas pela dificuldade crescente de compreendê-lo e alterá-lo com segurança. Nessa linha, \citeonline{feathers2004working} propõe uma definição operacional: código legado é código sem testes, pois, na ausência de uma rede de verificação automatizada, qualquer modificação passa a depender da memória e da cautela de quem a executa.
+\section{Contexto}
 
-Nos últimos anos, as plataformas \textit{low-code} passaram a ocupar espaço relevante no desenvolvimento corporativo, impulsionadas pela promessa de produtividade e pela possibilidade de que profissionais fora das equipes de Tecnologia da Informação construam suas próprias aplicações \cite{silva2023lowcode,silva2024lowcode}. O Microsoft Power Apps é um exemplo representativo desse movimento. Nele, o comportamento da aplicação é definido em Power Fx, uma linguagem de fórmulas derivada da notação de planilhas eletrônicas, escrita diretamente nas propriedades dos componentes visuais, como botões, galerias e campos de formulário.
+Muitas empresas e órgãos públicos ainda usam sistemas antigos. Esses sistemas são chamados de sistemas legados. Eles continuam funcionando e guardam regras de negócio importantes. Mas o código fica desatualizado, a tecnologia perde suporte e a manutenção fica cara e difícil.
 
-Essa característica, que acelera a entrega inicial, cria as condições para um novo tipo de legado. Em aplicações que crescem além do protótipo, regras de negócio complexas, como validações, cálculos e decisões condicionais, ficam distribuídas em dezenas de propriedades de interface, sem separação entre a camada de apresentação e a camada de domínio. A lógica não pode ser lida como um todo, não pode ser reutilizada fora da tela em que foi escrita e dificilmente pode ser verificada por testes de unidade, já que está acoplada aos eventos e ao estado dos componentes. Somam-se a isso a dependência da plataforma do fornecedor e a escassez de documentação, problema já reconhecido em equipes de desenvolvimento \textit{low-code} \cite{carlos2025lowcode}. O resultado é um débito técnico que se acumula de forma pouco visível: o sistema funciona, mas cada alteração se torna mais arriscada e mais cara. Nos termos de \citeonline{feathers2004working}, trata-se de código legado desde o momento em que é criado.
+Atualizar um sistema legado para tecnologias novas é o que chamamos de modernização. É um trabalho lento, porque a pessoa precisa entender o código antigo antes de mudar qualquer coisa.
 
-Diante desse cenário, as organizações costumam recorrer a duas estratégias tradicionais, ambas com limitações importantes. A primeira é a reescrita total do sistema em uma nova tecnologia, conhecida como \textit{Big Bang rewrite}. \citeonline{sommerville2011engenharia} aponta que a substituição completa de um sistema legado envolve alto custo e alto risco, sobretudo porque a especificação do sistema original raramente está completa e as regras de negócio incorporadas ao código precisam ser redescobertas. Quando essa redescoberta falha, comportamentos que os usuários consideravam corretos desaparecem sem que ninguém perceba até a entrada em produção. Por isso, o autor apresenta a reengenharia, que preserva a funcionalidade enquanto melhora a estrutura, como alternativa de menor risco à substituição. \citeonline{fowler2018refactoring} reforça essa visão ao defender a refatoração como uma sequência de pequenas transformações que preservam o comportamento observável do sistema, cada uma verificada por testes, em vez de uma única mudança de grande escala cujo efeito não pode ser conferido.
+Nos últimos anos, surgiram agentes de IA para o desenvolvimento, como o Claude Code. Eles leem o código do projeto, editam arquivos, rodam comandos e testes, e trabalham junto com o desenvolvedor. Por isso, podem ajudar na modernização. \citeonline{alves2026legacy}, por exemplo, usaram o Claude Code para migrar módulos de um sistema em Visual Basic 6 para C\#.
 
-A segunda estratégia é a terceirização da migração. Embora transfira o esforço de execução, ela amplia a distância entre quem conhece as regras de negócio e quem as reimplementa. O conhecimento que estava implícito nas fórmulas precisa ser explicado, interpretado e reescrito por uma equipe externa, com perdas de contexto a cada etapa e custos operacionais de contratação, coordenação e homologação. Ao final, a organização pode receber um sistema novo, mas continuar sem domínio sobre a lógica que ele implementa, o que reproduz, em outra tecnologia, o mesmo problema que motivou a migração \cite{sommerville2011engenharia}. Em ambos os casos, falta o que \citeonline{feathers2004working} considera condição para alterar um sistema legado com segurança: uma forma de caracterizar o comportamento atual antes de modificá-lo e de verificar, depois, que esse comportamento foi preservado.
+\section{Problema}
 
-Os Grandes Modelos de Linguagem (\textit{Large Language Models}, LLMs) abrem uma terceira possibilidade. Por serem capazes de ler código e descrever sua intenção em linguagem natural, esses modelos podem apoiar a engenharia reversa das fórmulas Power Fx: extrair as regras de negócio espalhadas pela interface, documentá-las de forma legível e servir de base para sua reimplementação em um \textit{backend} desacoplado em Python. Separada da interface, a lógica passa a ser uma unidade de código que pode ser lida, versionada e coberta por testes unitários, o que a torna passível de evolução incremental nos moldes propostos por \citeonline{fowler2018refactoring}. \citeonline{pereira2026modernizacao}, ao mapear a literatura recente sobre migração automatizada de sistemas legados, indicam que abordagens apoiadas por Inteligência Artificial conseguem realizar engenharia reversa semântica do código de origem, reduzindo falhas típicas da reescrita manual e preservando as regras de negócio durante a migração.
+Usar um agente de IA não resolve tudo. Os estudos mostram limites claros. No \citeonline{li2026repomod}, os agentes passaram em 91,3\% dos testes em projetos pequenos, mas em apenas 15,3\% nos projetos grandes. No estudo de \citeonline{alves2026legacy}, o agente deixou de migrar parte das regras do sistema, e as funcionalidades mais complexas foram as mais afetadas.
 
-Essa preservação, contudo, não pode ser presumida. \citeonline{pan2024lost} avaliaram a tradução de código entre cinco linguagens por LLMs e consideraram correta apenas a tradução que compila, executa e passa nos testes; nessas condições, o percentual de acertos ficou entre 2,1\% e 47,3\%, conforme o modelo. O resultado mostra que um código com aparência correta não é evidência de equivalência. Assim, o uso de LLMs na modernização precisa estar acompanhado de mecanismos de verificação que comparem o comportamento do sistema original com o do sistema refatorado.
+Isso mostra que o desenvolvedor precisa saber quais desafios aparecem quando um agente de IA atualiza um sistema legado, e como lidar com eles.
 
-Diante disso, o \textbf{problema} deste trabalho é a dificuldade de modernizar aplicações desenvolvidas em Power Apps, cujas regras de negócio estão acopladas à interface em fórmulas Power Fx, sem perder essas regras no processo e sem depender de reescrita manual integral ou de terceirização.
+\section{Pergunta de pesquisa}
 
-O \textbf{objetivo geral} é propor e avaliar um processo, apoiado por LLMs, para extrair as regras de negócio de aplicações Power Apps, documentá-las e refatorá-las para um \textit{backend} desacoplado em Python, verificável por testes unitários. Os \textbf{objetivos específicos} são:
+Este trabalho busca responder à seguinte pergunta:
+
+\begin{citacao}
+Quais são os desafios para converter e atualizar sistemas legados para novas tecnologias por meio de agentes de IA, do ponto de vista do desenvolvimento?
+\end{citacao}
+
+\section{Objetivos}
+
+O objetivo geral é identificar e analisar os desafios de atualizar sistemas legados com a ajuda de agentes de IA.
+
+Os objetivos específicos são:
 
 \begin{itemize}
-    \item identificar os padrões de acoplamento entre regras de negócio e componentes de interface em fórmulas Power Fx;
-    \item definir um processo de engenharia reversa apoiado por LLMs para extrair e documentar essas regras;
-    \item gerar, a partir das regras extraídas, uma implementação em Python separada da camada de apresentação;
-    \item construir testes unitários que verifiquem se a implementação em Python reproduz o comportamento das fórmulas originais;
-    \item avaliar o processo quanto à preservação das regras de negócio e à compreensibilidade da documentação gerada.
+    \item levantar na literatura os desafios já relatados;
+    \item organizar esses desafios em categorias;
+    \item observar esses desafios em um estudo de caso com um sistema real;
+    \item discutir o que o desenvolvedor pode fazer para lidar com cada desafio.
 \end{itemize}
 
-A \textbf{justificativa} deste trabalho está em três pontos. Do ponto de vista prático, organizações que adotaram plataformas \textit{low-code} acumulam aplicações cuja manutenção se torna cada vez mais custosa, e precisam de um caminho de modernização que não exija descartar o conhecimento já incorporado a elas. Do ponto de vista técnico, a separação entre regra de negócio e interface, acompanhada de testes, transforma um código legado, no sentido de \citeonline{feathers2004working}, em um código que pode evoluir de forma incremental e segura \cite{fowler2018refactoring}. Do ponto de vista acadêmico, a modernização de sistemas \textit{low-code} ainda é pouco explorada quando comparada à migração de linguagens tradicionais, e o uso de LLMs nesse contexto carece de avaliações que meçam, de forma objetiva, a preservação do comportamento.
+% TODO: confirmar com o orientador e com o responsável pelo sistema qual será o caso
+% (sistema, autorização de uso e se o código pode ser usado com uma IA externa).
 
-Do ponto de vista metodológico, este trabalho é uma pesquisa aplicada, conduzida como estudo de caso exploratório sobre o sistema \textit{Eventos}, uma aplicação Power Apps em uso na empresa em que a pesquisa é realizada \cite{gil2002,prodanov2013}. As etapas são: pesquisa bibliográfica sobre evolução de software, sistemas legados, plataformas \textit{low-code} e uso de LLMs na migração de código; seleção e anonimização de um trecho complexo de Power Fx; aplicação de um \textit{pipeline} de engenharia de \textit{prompt} em três etapas (documentação semântica, tradução para Python e geração de testes em Pytest); e avaliação por meio de testes de equivalência funcional e de validação qualitativa com \textit{stakeholders} da empresa. Ficam fora do escopo a migração da interface de usuário, a integração com fontes de dados de produção e outras plataformas \textit{low-code}.
+\section{Metodologia}
 
-Este trabalho está dividido em quatro capítulos. Esta introdução apresenta o contexto, o problema, os objetivos, a justificativa e a metodologia. O Capítulo~\ref{cap:fundamentacao} apresenta a fundamentação teórica sobre evolução de software, código legado, plataformas \textit{low-code}, refatoração e uso de LLMs na modernização de sistemas. O Capítulo~\ref{cap:metodologia} descreve a metodologia do estudo de caso. O Capítulo~\ref{cap:resultados} reúne os resultados e as considerações finais.
+O trabalho tem duas partes. A primeira é uma pesquisa na literatura sobre modernização de sistemas legados com agentes de IA. A segunda é um estudo de caso, em que um agente de IA ajuda a atualizar um sistema real.
+
+Para avaliar o resultado do estudo de caso, a atualização só é considerada correta se o sistema compilar, rodar e passar nos testes. Essa é a mesma ideia usada por \citeonline{pan2024lost}. Os testes ficam sob controle do desenvolvedor, e o agente não pode apagá-los ou mudá-los.
+
+\section{Organização do trabalho}
+
+O Capítulo 2 apresenta a base teórica: sistemas legados, agentes de IA, conversão de código e os desafios encontrados na literatura. O Capítulo 3 apresenta a proposta do estudo de caso. O Capítulo 4 traz as considerações finais.

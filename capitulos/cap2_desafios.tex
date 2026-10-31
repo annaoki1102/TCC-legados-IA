@@ -1,0 +1,52 @@
+\section{Desafios encontrados na literatura}
+
+A literatura mostra que usar agentes de IA na modernização traz resultados bons, mas também desafios. Eles estão resumidos no Quadro~\ref{tab:desafios} e explicados a seguir.
+
+\begin{table}[htb]
+\centering
+\caption{Desafios da modernização com agentes de IA}
+\label{tab:desafios}
+\small
+\begin{tabular}{p{3.2cm}p{6.6cm}p{3cm}}
+\toprule
+\textbf{Desafio} & \textbf{O que os estudos mostram} & \textbf{Fonte} \\
+\midrule
+Tamanho do sistema & Passou em 91,3\% dos testes com menos de 10 mil linhas e em 15,3\% com mais de 50 mil & \citeonline{li2026repomod} \\
+Complexidade das funcionalidades & Equivalência de 92\% (baixa), 81\% (média) e 47\% (alta) & \citeonline{alves2026legacy} \\
+Regras escondidas & O agente perdeu regras implícitas e regras espalhadas em vários arquivos & \citeonline{alves2026legacy} \\
+Atalhos do agente & Excluiu testes que falhavam e executou o programa original em vez de traduzi-lo & \citeonline{may2025freshbrew}; \citeonline{li2026repomod} \\
+Linguagens antigas & Bons resultados em MUMPS, notas ruins em assembly, e alucinações em ambos & \citeonline{diggs2024leveraging} \\
+Custo & Em média, 3,81 milhões de tokens e US\$ 4,19 por migração & \citeonline{alves2026legacy} \\
+\bottomrule
+\end{tabular}
+\\[2pt]
+\footnotesize Fonte: elaborado pela autora, com base nos trabalhos citados.
+\end{table}
+
+\subsection*{Tamanho e complexidade}
+
+Quanto maior e mais complexo o sistema, pior o resultado. Além dos números do Quadro~\ref{tab:desafios}, \citeonline{liu2026migrationbench} mediram 71,67\% de sucesso na migração mínima de Java 8 para Java 17 e 53,33\% na migração máxima. No \citeonline{may2025freshbrew}, o melhor modelo migrou 52,3\% dos projetos.
+
+\subsection*{Regras que o agente não vê}
+
+No estudo de \citeonline{alves2026legacy}, o agente deixou de migrar 100 de 331 itens analisados. A maior causa, com 42 casos, foram módulos vizinhos que ele não detectou. As regras escritas de forma explícita foram migradas melhor do que as implícitas, como as que dependem de parâmetros opcionais ou de configurações globais.
+
+\subsection*{Atalhos e falsa impressão de sucesso}
+
+O agente pode parecer ter acertado sem ter acertado. No \citeonline{may2025freshbrew}, um agente excluiu testes que falhavam do processo de construção do projeto. No \citeonline{li2026repomod}, em uma execução sem regras contra atalhos, um agente chegou a 99,5\% de testes aprovados, mas em cinco projetos ele só chamava o programa original. Por isso, o desenvolvedor deve proteger os testes e conferir o que o agente de fato fez.
+
+\subsection*{Linguagens antigas e pouca documentação}
+
+\citeonline{diggs2024leveraging} observaram que os modelos tendem a inventar informações em código legado. Os comentários gerados para MUMPS foram bem avaliados, mas os de assembly tiveram notas baixas.
+
+\subsection*{Custo}
+
+O custo depende do tamanho da tarefa. No estudo de \citeonline{alves2026legacy}, as funcionalidades de alta complexidade usaram cerca de 9 milhões de tokens, em média, e a maior parte do gasto vem do que o agente lê, e não do que escreve.
+
+\subsection*{Supervisão do desenvolvedor}
+
+Em todos os trabalhos, o resultado do agente precisou de verificação. \citeonline{alves2026legacy} usaram um segundo revisor para conferir as regras migradas. \citeonline{diggs2024leveraging} indicam avaliação humana, porque as métricas automáticas não bastaram. E \citeonline{chakaravarthy2026cobol} mostram que juntar o modelo com análise do código melhorou os resultados e reduziu a variação entre eles.
+
+\subsection*{O que ainda falta}
+
+Nos trabalhos que lemos, os estudos usam conjuntos de testes públicos ou sistemas de empresas. Falta observar esses desafios no dia a dia do desenvolvedor, em um sistema real e menor. É isso que o estudo de caso deste trabalho propõe.

@@ -1,114 +1,48 @@
-Este capítulo descreve como a pesquisa será conduzida. A Seção~\ref{sec:desenho} apresenta o desenho da pesquisa. A Seção~\ref{sec:selecao} descreve a seleção e a extração do trecho de código estudado. A Seção~\ref{sec:pipeline} detalha o \textit{pipeline} de transformação apoiado por LLM. A Seção~\ref{sec:criterios} define os critérios de avaliação.
+\section{O problema}
 
-\section{Desenho da Pesquisa}
-\label{sec:desenho}
+Sistemas antigos precisam ser atualizados, mas o trabalho é lento e arriscado. Um agente de IA pode acelerar esse trabalho, mas a literatura mostra desafios, como regras que o agente não vê, atalhos que ele pega e resultados difíceis de verificar (Quadro~\ref{tab:desafios}). O desenvolvedor precisa saber o que esperar e como se proteger.
 
-Este trabalho é uma pesquisa aplicada, de abordagem qualitativa e quantitativa, conduzida como estudo de caso exploratório \cite{gil2002,prodanov2013}. A pesquisa é aplicada porque busca gerar conhecimento para a solução de um problema concreto: a modernização de uma aplicação \textit{low-code} em uso. É exploratória porque o tema, a extração de regras de negócio de fórmulas Power Fx com apoio de LLMs, ainda é pouco estudado, e o objetivo é compreender o fenômeno e levantar evidências iniciais, e não testar hipóteses de forma generalizável.
+\section{O estudo de caso}
 
-O estudo de caso foi escolhido por permitir investigar o problema em profundidade, no seu contexto real, quando os limites entre o fenômeno e o contexto não são claramente definidos \cite{gil2002}. O caso estudado é o sistema \textit{Eventos}, uma aplicação desenvolvida em Microsoft Power Apps e utilizada pela empresa em que a pesquisa é realizada. A unidade de análise é um trecho de lógica de negócio escrito em Power Fx, extraído desse sistema conforme os critérios da Seção~\ref{sec:selecao}.
+Para observar esses desafios na prática, este trabalho propõe um estudo de caso com um sistema real.
 
-A pesquisa segue quatro etapas: seleção e extração do trecho a ser estudado; aplicação do \textit{pipeline} de transformação via LLM; execução dos testes de equivalência; e validação qualitativa com \textit{stakeholders} da empresa. Os resultados de cada etapa serão apresentados no Capítulo~\ref{cap:resultados}.
+% TODO: preencher depois de falar com o responsável pelo sistema e com o orientador.
+% - Nome e finalidade do sistema (e se pode ser citado ou precisa ficar anônimo)
+% - Tecnologia atual e tecnologia de destino (ex.: versão antiga de uma biblioteca para a nova)
+% - Tamanho aproximado (arquivos ou linhas de código)
+% - Se o código pode ser usado com uma IA externa
+O sistema escolhido é \textbf{[nome do sistema]}, usado para \textbf{[finalidade]}. Ele está em \textbf{[tecnologia atual]} e será atualizado para \textbf{[tecnologia de destino]}.
 
-\section{Seleção e Extração da Cobaia}
-\label{sec:selecao}
+O responsável pelo sistema é o \textit{stakeholder} do trabalho. Ele autoriza o uso do sistema, explica as regras importantes e ajuda a conferir se o resultado está correto.
 
-Chama-se aqui de \textit{cobaia} o trecho de código Power Fx que será submetido ao processo de modernização. Como o sistema \textit{Eventos} possui muitas telas e fórmulas, não é viável, no escopo deste trabalho, migrá-lo integralmente. Por isso, será selecionado um trecho representativo do problema descrito na Seção~\ref{sec:lowcode}, de acordo com os seguintes critérios:
+\section{Como o agente será usado}
 
-\begin{itemize}
-    \item \textbf{relevância para o negócio:} o trecho deve implementar uma regra que os usuários do sistema reconheçam como importante, como validações, cálculos ou decisões de fluxo;
-    \item \textbf{complexidade lógica:} o trecho deve conter condições aninhadas ou combinadas, operações sobre fontes de dados e mais de um caminho de execução;
-    \item \textbf{acoplamento à interface:} a regra deve depender do estado de componentes visuais, de modo que sua extração exija separar a lógica da apresentação;
-    \item \textbf{observabilidade:} deve ser possível executar o trecho no ambiente do Power Apps com entradas controladas, para que seu comportamento sirva de referência nos testes.
-\end{itemize}
+O agente de IA trabalha junto com o desenvolvedor, dentro do ambiente de desenvolvimento. O processo tem cinco passos:
 
-A escolha será feita em conjunto com os responsáveis pelo sistema. O trecho selecionado será exportado da aplicação, junto com as informações necessárias para compreendê-lo: os nomes e tipos dos componentes referenciados, a estrutura das fontes de dados utilizadas e as variáveis globais ou de contexto envolvidas.
+\begin{enumerate}
+    \item entender o sistema: o agente lê o código e explica o que cada parte faz;
+    \item criar testes antes de mudar o código, para guardar o comportamento atual;
+    \item pedir a atualização em partes pequenas, e não o sistema inteiro de uma vez;
+    \item rodar os testes depois de cada parte;
+    \item revisar o resultado e decidir o que aceitar.
+\end{enumerate}
 
-Antes de qualquer envio a um serviço de LLM, o material passará por anonimização. Nomes de tabelas, colunas, componentes e telas que revelem informações da empresa serão substituídos por identificadores genéricos; dados pessoais, endereços de e-mail, URLs e identificadores internos serão removidos ou substituídos por valores fictícios. A substituição será feita de forma consistente, preservando a estrutura e os tipos das expressões, para que a lógica permaneça intacta. A tabela de correspondência entre os nomes originais e os anonimizados será mantida apenas localmente e não será enviada ao modelo nem publicada neste trabalho. Esse cuidado atende às políticas de segurança da informação da empresa e à Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018).
+\section{Como será a avaliação}
 
-\section{Pipeline de Transformação via IA}
-\label{sec:pipeline}
-
-A transformação do trecho selecionado será feita por um \textit{pipeline} de engenharia de \textit{prompt} em três etapas sequenciais. A divisão em etapas segue a ideia de passos pequenos e verificáveis defendida por \citeonline{fowler2018refactoring}: em vez de pedir ao modelo uma conversão direta, cada etapa produz um artefato intermediário que pode ser revisado antes de servir de entrada para a etapa seguinte. A Figura~\ref{fig:pipeline} resume o fluxo.
-
-\begin{figure}[H]
-    \centering
-    \caption{\textit{Pipeline} de transformação via LLM.}
-    \label{fig:pipeline}
-    \small
-    \begin{tabular}{c}
-        \fbox{\parbox{0.6\textwidth}{\centering Trecho Power Fx anonimizado + contexto}} \\
-        $\downarrow$ \\
-        \fbox{\parbox{0.6\textwidth}{\centering \textbf{Etapa 1:} Documentação Semântica}} \\
-        $\downarrow$ \textit{revisão humana} \\
-        \fbox{\parbox{0.6\textwidth}{\centering \textbf{Etapa 2:} Tradução para Python}} \\
-        $\downarrow$ \\
-        \fbox{\parbox{0.6\textwidth}{\centering \textbf{Etapa 3:} Geração de Testes em Pytest}} \\
-        $\downarrow$ \\
-        \fbox{\parbox{0.6\textwidth}{\centering Avaliação (Seção~\ref{sec:criterios})}} \\
-    \end{tabular}
-    \legend{Fonte: elaboração da autora.}
-\end{figure}
-
-\subsection{Etapa 1: Documentação Semântica}
-
-Na primeira etapa, o modelo recebe o trecho Power Fx anonimizado e o seu contexto (componentes, fontes de dados e variáveis) e é instruído a descrever, em linguagem natural e em formato estruturado, as regras de negócio implementadas. A descrição deve identificar as entradas de cada regra, as condições avaliadas, os resultados possíveis e os efeitos colaterais, como gravação de dados, notificações e navegação entre telas.
-
-O objetivo é realizar a engenharia reversa semântica discutida por \citeonline{pereira2026modernizacao}: recuperar o que a fórmula faz, separado de como ela está escrita. O documento gerado será revisado pela autora, comparando cada regra descrita com o código original. Regras omitidas, incorretas ou inventadas pelo modelo serão registradas, pois indicam a qualidade da etapa, e corrigidas antes de seguir. O documento revisado passa a ser a especificação de referência para as etapas seguintes.
-
-\subsection{Etapa 2: Tradução para Python}
-
-Na segunda etapa, o modelo recebe o trecho original e a documentação revisada e é instruído a implementar as regras em Python, respeitando as seguintes restrições:
+Cada parte atualizada só é considerada correta se o código compilar, rodar e passar nos testes \cite{pan2024lost}. Além disso:
 
 \begin{itemize}
-    \item as regras de negócio devem ser implementadas como funções que não dependam de componentes visuais, recebendo como parâmetros os valores que, no Power Apps, vinham da interface;
-    \item o acesso a dados deve ficar separado das regras, por meio de funções ou classes específicas, de modo que as regras possam ser executadas sem conexão com a fonte de dados;
-    \item as reações de interface (\texttt{Notify}, \texttt{Navigate}) devem ser substituídas por valores de retorno que indiquem o resultado da decisão;
-    \item o código deve usar anotações de tipo e nomes coerentes com a documentação da Etapa 1.
+    \item os testes ficam sob controle do desenvolvedor, e o agente não pode apagá-los ou mudá-los;
+    \item a cobertura de testes não pode cair depois da atualização, como no \citeonline{may2025freshbrew};
+    \item o desenvolvedor confere se o agente não pegou atalhos, como chamar o código antigo em vez de reescrevê-lo.
 \end{itemize}
 
-O resultado é um \textit{backend} desacoplado, no sentido discutido na Seção~\ref{sec:refatoracao}: a lógica fica isolada e pode ser executada e testada sem a interface.
+Durante o trabalho, cada problema encontrado é registrado e classificado de acordo com os desafios do Quadro~\ref{tab:desafios}. Também são anotados o tempo gasto e o uso do agente, para ter uma ideia do custo.
 
-\subsection{Etapa 3: Geração de Testes em Pytest}
+\section{Cuidados}
 
-Na terceira etapa, o modelo recebe a documentação revisada e o código Python e é instruído a gerar testes unitários com o \textit{framework} Pytest. Cada regra documentada deve ter ao menos um teste para cada caminho de execução, incluindo valores-limite (por exemplo, a capacidade exatamente atingida) e entradas em branco ou inválidas, que concentram as diferenças de semântica entre Power Fx e Python apontadas na Seção~\ref{sec:ia}.
-
-Há, nessa etapa, um risco de circularidade: se o mesmo modelo gera o código e os resultados esperados dos testes, um erro de interpretação pode aparecer em ambos e os testes passariam mesmo com o comportamento incorreto. Para evitar isso, os testes gerados pelo modelo serão usados apenas para definir os \textit{casos} (as combinações de entrada). Os resultados esperados serão obtidos executando-se o trecho original no Power Apps, em ambiente de teste, com as mesmas entradas. Dessa forma, o sistema original funciona como oráculo, à semelhança dos testes de caracterização propostos por \citeonline{feathers2004working}.
-
-\subsection{Registro do experimento}
-
-Para permitir a reprodução e a análise do processo, serão registrados: o modelo de linguagem utilizado e sua versão; os parâmetros de geração; a data de execução; o texto integral de cada \textit{prompt}; as respostas obtidas; e as intervenções manuais realizadas entre as etapas. Os \textit{prompts} serão apresentados em apêndice.
-
-\section{Critérios de Avaliação}
-\label{sec:criterios}
-
-A avaliação combina uma dimensão quantitativa, voltada à equivalência funcional, e uma dimensão qualitativa, voltada à utilidade do resultado para a empresa.
-
-\subsection{Teste de equivalência funcional}
-
-A implementação em Python será considerada equivalente ao trecho original, para os casos avaliados, quando produzir o mesmo resultado que o Power Apps para todas as entradas do conjunto de testes. Esse critério segue o adotado por \citeonline{pan2024lost}: código que apenas executa sem erro não é suficiente; ele precisa reproduzir o comportamento do original. Serão analisados os seguintes indicadores:
-
-\begin{itemize}
-    \item \textbf{taxa de aprovação:} proporção de casos de teste em que o resultado do Python coincide com o do Power Apps;
-    \item \textbf{cobertura de regras:} proporção das regras presentes no código original que foram identificadas na documentação da Etapa 1;
-    \item \textbf{cobertura de código:} proporção das linhas e ramificações do código Python exercitadas pelos testes;
-    \item \textbf{intervenções manuais:} número e natureza das correções feitas pela autora em cada etapa do \textit{pipeline}.
-\end{itemize}
-
-Cada divergência encontrada será analisada para identificar sua origem (erro de interpretação na documentação, erro de tradução ou diferença de semântica entre as linguagens). Ressalta-se que os testes mostram a equivalência apenas para os casos executados e não provam a equivalência para todas as entradas possíveis; por isso, a escolha dos casos, com atenção a caminhos de execução e valores-limite, é parte do método.
-
-\subsection{Validação qualitativa com \textit{stakeholders}}
-
-A segunda dimensão avalia se a documentação e o código gerados são úteis para quem conhece e mantém o sistema. Serão realizadas entrevistas semiestruturadas com \textit{stakeholders} da empresa, como os responsáveis pelo sistema \textit{Eventos} e usuários que conhecem as regras de negócio envolvidas. Os participantes analisarão a documentação gerada e a estrutura do código Python e responderão a questões sobre:
-
-\begin{itemize}
-    \item a fidelidade da documentação às regras de negócio que conhecem;
-    \item a clareza da documentação em comparação com a leitura direta das fórmulas Power Fx;
-    \item a percepção sobre a manutenibilidade da versão em Python;
-    \item a viabilidade de adotar o processo na modernização de outras partes do sistema.
-\end{itemize}
-
-As respostas serão analisadas de forma qualitativa, buscando pontos de concordância, divergências e sugestões de melhoria.
+O código só será usado com o agente se o responsável pelo sistema autorizar por escrito. Dados sensíveis e senhas não fazem parte do estudo. Se o código não puder sair do ambiente da instituição, o estudo será feito apenas com a parte autorizada.
 
 \section{Limitações}
 
-O estudo se limita a um único sistema e a um trecho selecionado dele, e seus resultados não podem ser generalizados para todas as aplicações Power Apps nem para outras plataformas \textit{low-code}. A migração da interface de usuário e a integração com fontes de dados de produção estão fora do escopo. O comportamento de LLMs pode variar entre versões e execuções, o que é mitigado, mas não eliminado, pelo registro detalhado descrito na Seção~\ref{sec:pipeline}. Por fim, a validação qualitativa depende de um número reduzido de participantes, todos vinculados à mesma organização.
+O estudo observa um sistema, um agente e uma troca de tecnologia. Por isso, os resultados mostram o que aconteceu nesse caso e não valem para todos os sistemas. Estudos parecidos, como o de \citeonline{alves2026legacy}, também tratam seus resultados dessa forma.

@@ -23,7 +23,7 @@
 %--------------------------------------------
 % Variáveis para preencher com os seus dados
 %--------------------------------------------
-    \title{Modernização de sistemas legados low-code: extração de regras de negócio do Power Apps e refatoração para Python com LLMs}
+    \title{Desafios da modernização de sistemas legados com agentes de IA no desenvolvimento de software}
     \subtitle{}
     \author{Anna Beatriz Resende Oki Corrêa}
     \cidade{Brasília}
@@ -156,10 +156,10 @@ Nelson Mandela
 % -------------------------------
 \newpage
 \begin{resumo2}
-Plataformas \textit{low-code}, como o Microsoft Power Apps, aceleram a construção de aplicações corporativas, mas acoplam regras de negócio complexas, escritas em Power Fx, diretamente aos componentes de interface. Esse modelo gera débito técnico: a lógica fica dispersa, pouco documentada e não pode ser verificada por testes unitários, o que torna essas aplicações legadas desde a sua criação. As estratégias tradicionais de modernização, a reescrita total e a terceirização, envolvem alto custo e risco de perda das regras de negócio. Este trabalho investiga o uso de Grandes Modelos de Linguagem (LLMs) para realizar a engenharia reversa de fórmulas Power Fx, documentar as regras extraídas e refatorá-las para um \textit{backend} desacoplado em Python, verificável por testes unitários. A pesquisa é conduzida como estudo de caso exploratório sobre o sistema \textit{Eventos}, aplicando um \textit{pipeline} de engenharia de \textit{prompt} em três etapas: documentação semântica, tradução para Python e geração de testes em Pytest. A avaliação combina testes de equivalência funcional, que comparam o comportamento do sistema original com o da versão em Python, e validação qualitativa com \textit{stakeholders} da empresa. O trabalho está em andamento: a fundamentação teórica e o método estão definidos, e a execução do experimento será a próxima etapa.
+Este trabalho trata da atualização de sistemas legados para novas tecnologias com o uso de agentes de IA para desenvolvimento. O objetivo é identificar os desafios desse uso, do ponto de vista do desenvolvimento. Para isso, foi feita uma revisão de estudos recentes sobre o tema, e os desafios encontrados foram organizados em categorias. Também é proposto um estudo de caso em um sistema real, para observar esses desafios na prática, com avaliação por testes.
 
 \vspace*{20pt}
-\textbf{Palavras-chave:} sistemas legados; \textit{low-code}; Power Apps; refatoração; grandes modelos de linguagem; Python.
+\textbf{Palavras-chave:} Sistemas legados. Modernização de software. Agentes de IA. Desenvolvimento de software.
 \end{resumo2}
 
 
@@ -168,10 +168,10 @@ Plataformas \textit{low-code}, como o Microsoft Power Apps, aceleram a construç
 % -------------------------------
 \newpage
 \begin{abstract}
-Low-code platforms such as Microsoft Power Apps speed up the construction of corporate applications, but they couple complex business rules, written in Power Fx, directly to user interface components. This model creates technical debt: the logic is scattered, poorly documented and cannot be verified by unit tests, which makes these applications legacy from the moment they are created. Traditional modernization strategies, full rewrites and outsourcing, involve high costs and the risk of losing business rules. This work investigates the use of Large Language Models (LLMs) to reverse engineer Power Fx formulas, document the extracted rules and refactor them into a decoupled Python backend that can be verified by unit tests. The research is conducted as an exploratory case study of the \textit{Eventos} system, applying a three-stage prompt engineering pipeline: semantic documentation, translation to Python and test generation with Pytest. The evaluation combines functional equivalence tests, which compare the behavior of the original system with that of the Python version, and a qualitative validation with company stakeholders. The work is in progress: the theoretical background and the method are defined, and running the experiment is the next step.
+This work addresses the update of legacy systems to new technologies using AI development agents. The objective is to identify the challenges of this use from a development perspective. To do so, a review of recent studies on the subject was carried out, and the challenges found were organized into categories. A case study on a real system is also proposed, to observe these challenges in practice, with evaluation through tests.
 
 \vspace*{20pt}
-\textbf{Keywords:} legacy systems; low-code; Power Apps; refactoring; large language models; Python.
+\textbf{Keywords:} Legacy systems. Software modernization. AI agents. Software development.
 \end{abstract}
 
 
@@ -203,7 +203,10 @@ Low-code platforms such as Microsoft Power Apps speed up the construction of cor
 
 \chapter{Fundamentação Teórica}
 \label{cap:fundamentacao}
-\input{capitulos/cap2_fundamentacao}
+\input{capitulos/cap2_legados}
+\input{capitulos/cap2_agentes}
+\input{capitulos/cap2_verificacao}
+\input{capitulos/cap2_desafios}
 
 \chapter{Metodologia}
 \label{cap:metodologia}
