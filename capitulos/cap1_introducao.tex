@@ -1,10 +1,24 @@
 \section{Contexto}
 
-Muitas empresas e órgãos públicos ainda usam sistemas antigos. Esses sistemas são chamados de sistemas legados. Eles continuam funcionando e guardam regras de negócio importantes. Mas o código fica desatualizado, a tecnologia perde suporte e a manutenção fica cara e difícil.
+\subsection{Sistemas legados}
 
-Atualizar um sistema legado para tecnologias novas é o que chamamos de modernização. É um trabalho lento, porque a pessoa precisa entender o código antigo antes de mudar qualquer coisa.
+Sistemas legados são sistemas computacionais que permanecem em operação nas organizações, mesmo quando suas tecnologias, arquiteturas ou ferramentas de desenvolvimento já não acompanham as práticas atuais. Sua caracterização, entretanto, não depende exclusivamente da idade ou da tecnologia utilizada, mas também de sua importância para os processos organizacionais e das dificuldades envolvidas em sua manutenção, evolução e integração com novas soluções
 
-Nos últimos anos, surgiram agentes de IA para o desenvolvimento, como o Claude Code. Eles leem o código do projeto, editam arquivos, rodam comandos e testes, e trabalham junto com o desenvolvedor. Por isso, podem ajudar na modernização. \citeonline{alves2026legacy}, por exemplo, usaram o Claude Code para migrar módulos de um sistema em Visual Basic 6 para C\#.
+Em muitos casos, esses sistemas concentram regras de negócio construídas e modificadas ao longo de anos de utilização. Parte desse conhecimento pode estar incorporada diretamente ao código-fonte, especialmente quando a documentação é incompleta ou não acompanha as alterações realizadas durante sua existência. Dessa forma, substituir ou modernizar uma aplicação legada não consiste apenas em reproduzir suas funcionalidades em uma tecnologia mais recente, mas também envolve compreender e preservar comportamentos e regras essenciais para a organização. Essa complexidade torna a migração uma atividade que exige análise e validação cuidadosas.
+
+Estudos recentes apresentam exemplos desse cenário. No primeiro, \citeonline{alves2026legacy} trabalharam com um sistema de gestão de shopping centers escrito em Visual Basic 6, uma linguagem antiga, onde o sistema estava em produção havia mais de vinte anos e era organizado de duas formas: uma em um núcleo e outra em módulos secundários, que são acrescentados conforme o pedido de cada cliente da empresa dona do sistema. Os autores escolheram dois desses módulos, mas de naturezas diferentes, o de Medições, voltado a cálculos numéricos, como consumo e tarifas, e o de Compras, que depende de transações e de fluxos de aprovação. Os dois têm cerca de 299 mil e 224 mil linhas de código e são usados continuamente pelos clientes da empresa. Eles foram migrados para C\# (.NET 10), mantendo o mesmo banco de dados. A migração foi feita por um agente de IA, em uma única geração e sem feedback humano entre as tentativas, e envolveu 12 funcionalidades, seis de cada módulo: 6 simples, 4 médias e 2 complexas. O objetivo era que o código novo se comportasse como o original.
+
+O segundo estudo é da IBM. De acordo com \citeonline{chakaravarthy2026cobol}, sistemas empresariais modernos muitas vezes dependem de aplicações antigas em COBOL, uma linguagem criada há várias décadas, cuja estrutura rígida e monolítica e cujas variáveis globais dificultam a manutenção, e a adoção da nuvem. Para lidar com isso, os autores propõem traduzir o COBOL para Java combinando a análise do código com um modelo de linguagem. A análise infere as classes e as assinaturas dos métodos em Java a partir dos dados e do fluxo de controle do programa em COBOL, e essas informações guiam o modelo na tradução da lógica dos programas. A solução faz parte de um produto da IBM, o watsonx Code Assistant for Z. Os autores a avaliaram em 20 programas de um conjunto chamado GenAPP e em 10 aplicações de clientes e, segundo eles, ela já é usada em vários ambientes de clientes da IBM.
+
+\subsection{Dificuldades}
+
+Esses sistemas trazem dificuldades para o desenvolvedor. No estudo de \citeonline{alves2026legacy}, havia regras espalhadas em vários arquivos e regras escondidas em parâmetros opcionais e em configurações globais, e elas foram as mais difíceis de migrar. Outro estudo avaliou como documentar código escrito em linguagens antigas, como MUMPS e assembly \cite{diggs2024leveraging}.
+
+Por isso, atualizar um sistema legado para tecnologias novas, o que chamamos de modernização, é um trabalho que exige cuidado. O sistema novo precisa continuar fazendo o que o antigo fazia.
+
+\subsection{Agentes de IA}
+
+Agentes de IA para desenvolvimento são ferramentas que leem o código de um projeto, editam arquivos e rodam comandos e testes. Estudos recentes avaliaram esses agentes em tarefas de modernização \cite{li2026repomod, liu2026migrationbench, may2025freshbrew}.
 
 \section{Problema}
 
