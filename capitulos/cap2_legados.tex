@@ -1,6 +1,10 @@
+Este capítulo apresenta a base teórica do trabalho: o que são sistemas legados e modernização, como agentes de IA são usados nessa tarefa, como o resultado é verificado e quais desafios a literatura relata.
+
+Esta revisão reúne estudos publicados entre 2024 e 2026 sobre modernização de sistemas legados com agentes de IA. A busca foi feita no Google e no Google Acadêmico, com termos como \textbf{[termos usados na busca]}, e teve o apoio de uma ferramenta de IA. Foram escolhidos os estudos que tratam de migração, atualização ou documentação de código legado com o uso de agentes ou modelos de linguagem e que relatam resultados ou dificuldades. Esta não é uma revisão sistemática, por isso pode não incluir todos os estudos da área.
+
 \section{Sistemas legados e modernização}
 
-Um sistema legado é um sistema antigo que ainda está em uso. Ele pode estar escrito em uma linguagem pouco usada hoje, ter uma estrutura difícil de mudar ou depender de bibliotecas sem suporte. Mesmo assim, ele costuma ser importante, porque guarda regras de negócio que a organização usa todos os dias.
+Um sistema legado é um sistema antigo que ainda está em uso. Ele pode estar escrito em uma linguagem pouco usada hoje, ter uma estrutura difícil de mudar ou depender de bibliotecas sem suporte. Mesmo assim, ele pode ser importante, porque muitas vezes guarda regras de negócio que a organização usa todos os dias.
 
 Um exemplo é o sistema estudado por \citeonline{alves2026legacy}. Era um sistema de gestão em Visual Basic 6, em produção havia mais de vinte anos. Outro exemplo são os programas em COBOL, que a IBM migra para Java \cite{chakaravarthy2026cobol}.
 
@@ -11,4 +15,4 @@ A modernização é o trabalho de levar esse sistema para uma tecnologia mais no
     \item \textbf{atualização de versão}, por exemplo de Java 8 para Java 17 \cite{liu2026migrationbench, may2025freshbrew}.
 \end{itemize}
 
-Uma dificuldade comum é a falta de documentação. Muitas vezes, o código é a única fonte do que o sistema faz. \citeonline{diggs2024leveraging} testaram modelos de linguagem para documentar código legado em MUMPS e em assembly. Entender o código antigo é o primeiro passo da modernização.
+Uma dificuldade relatada é a falta de documentação. Em alguns casos, o código é a única fonte do que o sistema faz. \citeonline{diggs2024leveraging} testaram modelos de linguagem para documentar código legado em MUMPS e em assembly. Entender o código antigo é uma etapa importante da modernização.

@@ -1,32 +1,18 @@
-\section{Contexto}
+Sistemas legados são sistemas que continuam em uso nas organizações, mesmo quando suas tecnologias ou ferramentas já não acompanham as práticas atuais. Isso não depende só da idade do sistema. Depende também da importância dele para os processos da organização e da dificuldade de mantê-lo, evoluí-lo e integrá-lo a novas soluções.
 
-\subsection{Sistemas legados}
+Muitas vezes, esses sistemas guardam regras de negócio criadas e alteradas ao longo de anos. Parte desse conhecimento pode estar só no código, principalmente quando a documentação é incompleta ou não acompanha as mudanças. Atualizar um sistema legado para tecnologias mais novas é o que se chama de modernização. Ela não é só reproduzir as funcionalidades em uma tecnologia recente: também é preciso entender e preservar as regras importantes para a organização. O sistema novo precisa continuar fazendo o que o antigo fazia. Por isso, esse trabalho exige análise e validação cuidadosas.
 
-Sistemas legados são sistemas computacionais que permanecem em operação nas organizações, mesmo quando suas tecnologias, arquiteturas ou ferramentas de desenvolvimento já não acompanham as práticas atuais. Sua caracterização, entretanto, não depende exclusivamente da idade ou da tecnologia utilizada, mas também de sua importância para os processos organizacionais e das dificuldades envolvidas em sua manutenção, evolução e integração com novas soluções
+Estudos recentes trazem exemplos desse cenário. \citeonline{alves2026legacy} trabalharam com um sistema de gestão de shopping centers escrito em Visual Basic 6, uma linguagem antiga. O sistema estava em produção havia mais de vinte anos. Ele era organizado em um núcleo e em módulos secundários, acrescentados conforme o pedido de cada cliente da empresa dona do sistema. Os autores escolheram dois módulos de naturezas diferentes. O de Medições é voltado a cálculos numéricos, como consumo e tarifas. O de Compras depende de transações e de fluxos de aprovação. Os dois têm cerca de 299 mil e 224 mil linhas de código e são usados continuamente pelos clientes da empresa. Eles foram migrados para C\# (.NET 10), mantendo o mesmo banco de dados. A migração foi feita por um agente de IA, em uma única geração e sem feedback humano entre as tentativas. Ela envolveu 12 funcionalidades, seis de cada módulo: 6 simples, 4 médias e 2 complexas. O objetivo era que o código novo se comportasse como o original.
 
-Em muitos casos, esses sistemas concentram regras de negócio construídas e modificadas ao longo de anos de utilização. Parte desse conhecimento pode estar incorporada diretamente ao código-fonte, especialmente quando a documentação é incompleta ou não acompanha as alterações realizadas durante sua existência. Dessa forma, substituir ou modernizar uma aplicação legada não consiste apenas em reproduzir suas funcionalidades em uma tecnologia mais recente, mas também envolve compreender e preservar comportamentos e regras essenciais para a organização. Essa complexidade torna a migração uma atividade que exige análise e validação cuidadosas.
+O segundo exemplo vem da IBM. De acordo com \citeonline{chakaravarthy2026cobol}, sistemas empresariais modernos muitas vezes dependem de aplicações antigas em COBOL, uma linguagem criada há várias décadas. A estrutura rígida e monolítica e as variáveis globais dessas aplicações dificultam a manutenção e a adoção da nuvem. Para lidar com isso, os autores propõem traduzir o COBOL para Java combinando a análise do código com um modelo de linguagem. A análise infere as classes e as assinaturas dos métodos em Java a partir dos dados e do fluxo de controle do programa em COBOL. Essas informações guiam o modelo na tradução da lógica dos programas. A solução faz parte de um produto da IBM, o watsonx Code Assistant for Z. Os autores a avaliaram em 20 programas de um conjunto chamado GenAPP e em 10 aplicações de clientes. Segundo eles, ela já é usada em vários ambientes de clientes da IBM.
 
-Estudos recentes apresentam exemplos desse cenário. No primeiro, \citeonline{alves2026legacy} trabalharam com um sistema de gestão de shopping centers escrito em Visual Basic 6, uma linguagem antiga, onde o sistema estava em produção havia mais de vinte anos e era organizado de duas formas: uma em um núcleo e outra em módulos secundários, que são acrescentados conforme o pedido de cada cliente da empresa dona do sistema. Os autores escolheram dois desses módulos, mas de naturezas diferentes, o de Medições, voltado a cálculos numéricos, como consumo e tarifas, e o de Compras, que depende de transações e de fluxos de aprovação. Os dois têm cerca de 299 mil e 224 mil linhas de código e são usados continuamente pelos clientes da empresa. Eles foram migrados para C\# (.NET 10), mantendo o mesmo banco de dados. A migração foi feita por um agente de IA, em uma única geração e sem feedback humano entre as tentativas, e envolveu 12 funcionalidades, seis de cada módulo: 6 simples, 4 médias e 2 complexas. O objetivo era que o código novo se comportasse como o original.
+Esses estudos também relatam dificuldades para o desenvolvedor. No estudo de \citeonline{alves2026legacy}, as regras espalhadas em vários arquivos e as regras escondidas em parâmetros opcionais e em configurações globais foram as mais difíceis de migrar. Outro estudo avaliou o uso de modelos de linguagem para documentar código em linguagens antigas, como MUMPS e assembly \cite{diggs2024leveraging}, para ajudar a entender esse tipo de código.
 
-O segundo estudo é da IBM. De acordo com \citeonline{chakaravarthy2026cobol}, sistemas empresariais modernos muitas vezes dependem de aplicações antigas em COBOL, uma linguagem criada há várias décadas, cuja estrutura rígida e monolítica e cujas variáveis globais dificultam a manutenção, e a adoção da nuvem. Para lidar com isso, os autores propõem traduzir o COBOL para Java combinando a análise do código com um modelo de linguagem. A análise infere as classes e as assinaturas dos métodos em Java a partir dos dados e do fluxo de controle do programa em COBOL, e essas informações guiam o modelo na tradução da lógica dos programas. A solução faz parte de um produto da IBM, o watsonx Code Assistant for Z. Os autores a avaliaram em 20 programas de um conjunto chamado GenAPP e em 10 aplicações de clientes e, segundo eles, ela já é usada em vários ambientes de clientes da IBM.
+Uma forma de apoiar esse trabalho é usar agentes de IA para desenvolvimento. Eles são ferramentas que leem o código de um projeto, editam arquivos e rodam comandos e testes. Estudos recentes avaliaram esses agentes em tarefas de modernização \cite{li2026repomod, liu2026migrationbench, may2025freshbrew}.
 
-\subsection{Dificuldades}
+Os resultados desses estudos relatam limites. No estudo de \citeonline{li2026repomod}, os agentes passaram em 91,3\% dos testes em projetos pequenos, mas em apenas 15,3\% nos projetos grandes. No estudo de \citeonline{alves2026legacy}, o agente deixou de migrar parte das regras do sistema, e as funcionalidades mais complexas foram as mais afetadas. Por isso, o desenvolvedor precisa saber quais desafios podem aparecer quando um agente de IA atualiza um sistema legado e como lidar com eles.
 
-Esses sistemas trazem dificuldades para o desenvolvedor. No estudo de \citeonline{alves2026legacy}, havia regras espalhadas em vários arquivos e regras escondidas em parâmetros opcionais e em configurações globais, e elas foram as mais difíceis de migrar. Outro estudo avaliou como documentar código escrito em linguagens antigas, como MUMPS e assembly \cite{diggs2024leveraging}.
-
-Por isso, atualizar um sistema legado para tecnologias novas, o que chamamos de modernização, é um trabalho que exige cuidado. O sistema novo precisa continuar fazendo o que o antigo fazia.
-
-\subsection{Agentes de IA}
-
-Agentes de IA para desenvolvimento são ferramentas que leem o código de um projeto, editam arquivos e rodam comandos e testes. Estudos recentes avaliaram esses agentes em tarefas de modernização \cite{li2026repomod, liu2026migrationbench, may2025freshbrew}.
-
-\section{Problema}
-
-Usar um agente de IA não resolve tudo. Os estudos mostram limites claros. No \citeonline{li2026repomod}, os agentes passaram em 91,3\% dos testes em projetos pequenos, mas em apenas 15,3\% nos projetos grandes. No estudo de \citeonline{alves2026legacy}, o agente deixou de migrar parte das regras do sistema, e as funcionalidades mais complexas foram as mais afetadas.
-
-Isso mostra que o desenvolvedor precisa saber quais desafios aparecem quando um agente de IA atualiza um sistema legado, e como lidar com eles.
-
-\section{Pergunta de pesquisa}
+Este tema é relevante porque sistemas antigos precisam ser atualizados, mas esse trabalho é lento e arriscado. Um agente de IA pode acelerá-lo, mas a literatura relata desafios, como regras que o agente não percebe, atalhos que ele toma e resultados difíceis de verificar. Nos estudos que lemos, a avaliação usa conjuntos de testes públicos ou sistemas de empresas, e encontramos pouco sobre o uso do agente no dia a dia do desenvolvedor, em um sistema real e menor. Este trabalho busca ajudar o desenvolvedor a saber o que esperar e como se proteger. Para isso, faz uma revisão da literatura e propõe um estudo de caso em um sistema real, com avaliação por testes.
 
 Este trabalho busca responder à seguinte pergunta:
 
@@ -34,28 +20,4 @@ Este trabalho busca responder à seguinte pergunta:
 Quais são os desafios para converter e atualizar sistemas legados para novas tecnologias por meio de agentes de IA, do ponto de vista do desenvolvimento?
 \end{citacao}
 
-\section{Objetivos}
-
-O objetivo geral é identificar e analisar os desafios de atualizar sistemas legados com a ajuda de agentes de IA.
-
-Os objetivos específicos são:
-
-\begin{itemize}
-    \item levantar na literatura os desafios já relatados;
-    \item organizar esses desafios em categorias;
-    \item observar esses desafios em um estudo de caso com um sistema real;
-    \item discutir o que o desenvolvedor pode fazer para lidar com cada desafio.
-\end{itemize}
-
-% TODO: confirmar com o orientador e com o responsável pelo sistema qual será o caso
-% (sistema, autorização de uso e se o código pode ser usado com uma IA externa).
-
-\section{Metodologia}
-
-O trabalho tem duas partes. A primeira é uma pesquisa na literatura sobre modernização de sistemas legados com agentes de IA. A segunda é um estudo de caso, em que um agente de IA ajuda a atualizar um sistema real.
-
-Para avaliar o resultado do estudo de caso, a atualização só é considerada correta se o sistema compilar, rodar e passar nos testes. Essa é a mesma ideia usada por \citeonline{pan2024lost}. Os testes ficam sob controle do desenvolvedor, e o agente não pode apagá-los ou mudá-los.
-
-\section{Organização do trabalho}
-
-O Capítulo 2 apresenta a base teórica: sistemas legados, agentes de IA, conversão de código e os desafios encontrados na literatura. O Capítulo 3 apresenta a proposta do estudo de caso. O Capítulo 4 traz as considerações finais.
+Este trabalho está organizado em seis capítulos, contando esta introdução. O Capítulo 2 apresenta os objetivos. O Capítulo 3 reúne o que a literatura relata sobre sistemas legados, agentes de IA, verificação do código e os desafios desse uso. Com base nisso, o Capítulo 4 descreve como o estudo de caso será feito, e o Capítulo 5 apresenta os resultados e as considerações finais. O Capítulo 6 traz a conclusão.

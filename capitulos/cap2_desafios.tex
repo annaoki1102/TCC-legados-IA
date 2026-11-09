@@ -1,6 +1,6 @@
 \section{Desafios encontrados na literatura}
 
-A literatura mostra que usar agentes de IA na modernização traz resultados bons, mas também desafios. Eles estão resumidos no Quadro~\ref{tab:desafios} e explicados a seguir.
+Além da verificação, há outros pontos a observar. A literatura relata resultados bons no uso de agentes de IA na modernização, mas também desafios. Eles estão resumidos no Quadro~\ref{tab:desafios} e explicados a seguir.
 
 \begin{table}[htb]
 \centering
@@ -9,7 +9,7 @@ A literatura mostra que usar agentes de IA na modernização traz resultados bon
 \small
 \begin{tabular}{p{3.2cm}p{6.6cm}p{3cm}}
 \toprule
-\textbf{Desafio} & \textbf{O que os estudos mostram} & \textbf{Fonte} \\
+\textbf{Desafio} & \textbf{O que os estudos relatam} & \textbf{Fonte} \\
 \midrule
 Tamanho do sistema & Passou em 91,3\% dos testes com menos de 10 mil linhas e em 15,3\% com mais de 50 mil & \citeonline{li2026repomod} \\
 Complexidade das funcionalidades & Equivalência de 92\% (baixa), 81\% (média) e 47\% (alta) & \citeonline{alves2026legacy} \\
@@ -25,7 +25,7 @@ Custo & Em média, 3,81 milhões de tokens e US\$ 4,19 por migração & \citeonl
 
 \subsection*{Tamanho e complexidade}
 
-Quanto maior e mais complexo o sistema, pior o resultado. Além dos números do Quadro~\ref{tab:desafios}, \citeonline{liu2026migrationbench} mediram 71,67\% de sucesso na migração mínima de Java 8 para Java 17 e 53,33\% na migração máxima. No \citeonline{may2025freshbrew}, o melhor modelo migrou 52,3\% dos projetos.
+Nos estudos lidos, os resultados foram piores em sistemas maiores e mais complexos. Além dos números do Quadro~\ref{tab:desafios}, \citeonline{liu2026migrationbench} relataram 71,67\% de sucesso na migração mínima de Java 8 para Java 17 e 53,33\% na migração máxima. No estudo de \citeonline{may2025freshbrew}, o melhor modelo migrou 52,3\% dos projetos.
 
 \subsection*{Regras que o agente não vê}
 
@@ -33,7 +33,7 @@ No estudo de \citeonline{alves2026legacy}, o agente deixou de migrar 100 de 331 
 
 \subsection*{Atalhos e falsa impressão de sucesso}
 
-O agente pode parecer ter acertado sem ter acertado. No \citeonline{may2025freshbrew}, um agente excluiu testes que falhavam do processo de construção do projeto. No \citeonline{li2026repomod}, em uma execução sem regras contra atalhos, um agente chegou a 99,5\% de testes aprovados, mas em cinco projetos ele só chamava o programa original. Por isso, o desenvolvedor deve proteger os testes e conferir o que o agente de fato fez.
+O agente pode parecer ter acertado sem ter acertado. No estudo de \citeonline{may2025freshbrew}, um agente excluiu testes que falhavam do processo de construção do projeto. No estudo de \citeonline{li2026repomod}, em uma execução sem regras contra atalhos, um agente chegou a 99,5\% de testes aprovados, mas em cinco projetos ele só chamava o programa original. Por isso, o desenvolvedor deve proteger os testes e conferir o que o agente de fato fez.
 
 \subsection*{Linguagens antigas e pouca documentação}
 
@@ -45,8 +45,8 @@ O custo depende do tamanho da tarefa. No estudo de \citeonline{alves2026legacy},
 
 \subsection*{Supervisão do desenvolvedor}
 
-Em todos os trabalhos, o resultado do agente precisou de verificação. \citeonline{alves2026legacy} usaram um segundo revisor para conferir as regras migradas. \citeonline{diggs2024leveraging} indicam avaliação humana, porque as métricas automáticas não bastaram. E \citeonline{chakaravarthy2026cobol} mostram que juntar o modelo com análise do código melhorou os resultados e reduziu a variação entre eles.
+Nos estudos lidos, o resultado do agente foi verificado de alguma forma. \citeonline{alves2026legacy} usaram um segundo revisor para conferir as regras migradas. \citeonline{diggs2024leveraging} indicam avaliação humana, porque as métricas automáticas não bastaram. E \citeonline{chakaravarthy2026cobol} relatam que juntar o modelo com análise do código melhorou os resultados e reduziu a variação entre eles.
 
 \subsection*{O que ainda falta}
 
-Nos trabalhos que lemos, os estudos usam conjuntos de testes públicos ou sistemas de empresas. Falta observar esses desafios no dia a dia do desenvolvedor, em um sistema real e menor. É isso que o estudo de caso deste trabalho propõe.
+Nos estudos que lemos, a avaliação usa conjuntos de testes públicos ou sistemas de empresas, e encontramos pouco sobre o uso do agente no dia a dia do desenvolvedor, em um sistema real e menor. É isso que o estudo de caso deste trabalho propõe.

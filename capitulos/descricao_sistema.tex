@@ -1,0 +1,78 @@
+\section{Descrição do sistema atual}
+
+\subsection{Finalidade e usuários}
+
+O SIS Eventos é usado na [instituição] para registrar e aprovar a participação de pessoas em eventos. Quem tem interesse em ir a um evento pela instituição cadastra um pedido no sistema, com dados como o evento, a data, a passagem e os valores. O gabinete usa o sistema para registrar e acompanhar esses eventos, e a aprovação é feita pelo presidente. O sistema também tem cadastros de áreas requisitantes, de pontos focais por área e de permissões dos usuários.
+
+\subsection{Tecnologia e estrutura}
+
+O sistema foi feito no Microsoft Power Apps e guarda os dados em listas do SharePoint. Ele tem nove telas: um painel de eventos por ano e por status, a lista de solicitações, o formulário para criar uma solicitação, as pendências, a prestação de contas, a configuração e os três cadastros. Os dados ficam em dez listas, como eventos, países, cargos, diárias nacionais, diárias internacionais e previsão de custos dos eventos.
+
+\subsection{Fluxo de um pedido}
+
+O pedido começa com o cadastro do evento. A pessoa informa dados como identificação, organizador, datas, tipo de evento, âmbito (nacional ou internacional), local, área requisitante, número do processo e justificativa. Junto com o pedido, ela registra os custos que espera ter, como passagem, diárias, seguro viagem, inscrição e custos complementares. O sistema guarda quem criou o pedido e quem fez a última alteração, com data e hora.
+
+Cada pedido tem um status: Em Aberto, Em Análise, Aprovado, Não Aprovado, Cancelado ou Aprovado para ajustes. Neste último, o pedido volta para a pessoa corrigir. Depois da aprovação, os valores são pagos. Quando o evento termina, a prestação de contas compara o que foi previsto com o que foi realmente gasto.
+
+\subsection{Regras do sistema}
+
+Esta seção descreve as regras que foram lidas no código do sistema, no editor do Power Apps. Elas são a base para os testes do estudo de caso.
+
+\subsubsection{Registros excluídos}
+
+As listas têm um campo chamado Excluido. Os eventos, os custos e as diárias marcados com um asterisco (*) nesse campo são ignorados nas listas de escolha e nas contas.
+
+\subsubsection{Diárias nacionais por cargo}
+
+Em um evento nacional, a pessoa escolhe o cargo ou função. O sistema então mostra as diárias da lista de diárias nacionais que têm a mesma classificação desse cargo. Cada opção aparece com o nome da cidade ou capital e o valor da diária. A classe do cargo é preenchida automaticamente a partir da lista de cargos. Se o âmbito do evento não for nacional, essa lista não mostra opções.
+
+\subsubsection{Valor de cada linha de custo}
+
+O valor de cada linha de custo depende do tipo de custo, como mostra o Quadro~\ref{tab:custos}. O sistema testa os casos em ordem e usa o primeiro que se aplica. O resultado aparece em reais.
+
+% TODO: confirmar com o responsável pelo sistema se o valor da linha é "por pessoa"
+% (na diária nacional, a conta da linha não multiplica pela quantidade de pessoas, mas o total multiplica).
+
+\begin{table}[htb]
+\centering
+\caption{Cálculo do valor de cada linha de custo}
+\label{tab:custos}
+\small
+\begin{tabular}{p{4.2cm}p{8.8cm}}
+\toprule
+\textbf{Tipo de custo} & \textbf{Como o valor é calculado} \\
+\midrule
+Seguro viagem & valor do seguro $\times$ quantidade de pessoas \\
+Passagem & quantidade de pessoas $\times$ passagem individual \\
+Diária internacional & valor já convertido para reais, guardado na linha \\
+Diária nacional (da lista) & quantidade de diárias $\times$ valor da diária \\
+Diária de outro cargo (valor digitado) & quantidade de diárias $\times$ valor digitado $\times$ quantidade de pessoas \\
+Inscrição & valor já convertido para reais, guardado na linha \\
+Custo complementar & o próprio valor \\
+\bottomrule
+\end{tabular}
+\\[2pt]
+\footnotesize Fonte: elaborado pela autora, com base no código do sistema.
+\end{table}
+
+\subsubsection{Total previsto de custos}
+
+O sistema calcula o total previsto de custos dos eventos aprovados de um ano. Para cada evento aprovado, ele soma as linhas de custo previstas que não foram excluídas. Cada linha soma sete partes:
+
+\begin{itemize}
+    \item diária de outro cargo: quantidade de diárias $\times$ valor digitado $\times$ quantidade de pessoas;
+    \item diária nacional: quantidade de diárias $\times$ valor da lista $\times$ quantidade de pessoas;
+    \item diária internacional: cotação do dólar $\times$ valor em dólar $\times$ quantidade de diárias $\times$ quantidade de pessoas;
+    \item inscrição: o valor, multiplicado pela cotação do dólar quando a moeda é o dólar;
+    \item custo complementar: o próprio valor;
+    \item seguro viagem: valor $\times$ quantidade de pessoas;
+    \item passagem: passagem individual $\times$ quantidade de pessoas.
+\end{itemize}
+
+Cada parte é arredondada para duas casas decimais, e o total aparece em reais. Essa conta soma todos os campos da linha, sem olhar o tipo de custo.
+
+% TODO: confirmar de onde vêm os campos de valor convertido (ValorConvertido e InscricaoConvertida).
+
+\subsection{Como as regras aparecem no código}
+
+As contas ficam dentro de controles das telas, como galerias, botões e campos de texto, e não em um lugar só. A busca no editor encontrou 39 ocorrências da lista de diárias nacionais e 88 da quantidade de pessoas, em várias telas. A fórmula que monta a lista de diárias nacionais tem três casos com as mesmas contas e condições diferentes. O editor também avisa que há controles com versões mais recentes disponíveis, como 20 controles na tela de exercícios. Esses pontos serão observados no estudo de caso.

@@ -1,48 +1,56 @@
-\section{O problema}
+% TODO: confirmar com o orientador e com o responsável pelo sistema qual será o caso (sistema, autorização por escrito, uso e se o código pode ser usado com uma IA externa).
+% TODO: confirmar com o responsável pelo sistema se o nome SIS Eventos e a instituição podem ser citados ou se precisam ficar anônimos.
+% TODO: informar o tamanho aproximado do sistema (número de telas, listas e fórmulas) e as funcionalidades escolhidas.
+Este capítulo descreve como o estudo de caso será feito.
 
-Sistemas antigos precisam ser atualizados, mas o trabalho é lento e arriscado. Um agente de IA pode acelerar esse trabalho, mas a literatura mostra desafios, como regras que o agente não vê, atalhos que ele pega e resultados difíceis de verificar (Quadro~\ref{tab:desafios}). O desenvolvedor precisa saber o que esperar e como se proteger.
+\section{Tipo de pesquisa}
+
+Este trabalho tem abordagem qualitativa e caráter exploratório. Ele tem duas partes: uma revisão da literatura, apresentada no Capítulo 3, e um estudo de caso, descrito neste capítulo. A pesquisa é qualitativa porque descreve e analisa os desafios encontrados, sem medir com estatística. É exploratória porque busca conhecer melhor um tema ainda pouco observado na prática do desenvolvedor.
 
 \section{O estudo de caso}
 
-Para observar esses desafios na prática, este trabalho propõe um estudo de caso com um sistema real.
+Para observar na prática os desafios relatados na literatura, este trabalho propõe um estudo de caso com um sistema real. O sistema escolhido é o SIS Eventos, usado para registrar e aprovar a participação de pessoas em eventos. Ele foi feito no Microsoft Power Apps, com dados em listas do SharePoint, e será atualizado para \textbf{[tecnologia de destino]}.
 
-% TODO: preencher depois de falar com o responsável pelo sistema e com o orientador.
-% - Nome e finalidade do sistema (e se pode ser citado ou precisa ficar anônimo)
-% - Tecnologia atual e tecnologia de destino (ex.: versão antiga de uma biblioteca para a nova)
-% - Tamanho aproximado (arquivos ou linhas de código)
-% - Se o código pode ser usado com uma IA externa
-O sistema escolhido é \textbf{[nome do sistema]}, usado para \textbf{[finalidade]}. Ele está em \textbf{[tecnologia atual]} e será atualizado para \textbf{[tecnologia de destino]}.
+Serão atualizadas poucas funcionalidades, com regras de negócio e graus de complexidade diferentes: \textbf{[funcionalidade simples]}, \textbf{[funcionalidade média]} e \textbf{[funcionalidade complexa]}.
 
 O responsável pelo sistema é o \textit{stakeholder} do trabalho. Ele autoriza o uso do sistema, explica as regras importantes e ajuda a conferir se o resultado está correto.
 
-\section{Como o agente será usado}
+\input{capitulos/descricao_sistema}
 
-O agente de IA trabalha junto com o desenvolvedor, dentro do ambiente de desenvolvimento. O processo tem cinco passos:
+\section{Dados sintéticos}
+
+O estudo de caso usará dados sintéticos, ou seja, dados inventados para o estudo. Nenhum dado real será usado. Dados sensíveis e senhas não fazem parte do estudo. Os dados inventados terão os mesmos campos das listas do sistema atual, como eventos, cargos, diárias e custos. Os casos de teste serão escolhidos para passar por cada regra da descrição do sistema atual, como os registros excluídos, cada tipo de custo e o total previsto.
+
+\section{Processamento dos dados}
+
+No sistema atual, os dados ficam em listas do SharePoint, e as contas ficam dentro de controles das telas do Power Apps, e não em um lugar só. Cada caso de teste será executado no sistema atual, e o resultado será anotado, como o valor de cada linha de custo e o total previsto.
+
+No sistema novo, em \textbf{[tecnologia de destino]}, os mesmos dados serão processados pelo código feito com a ajuda do agente. O resultado de cada caso será comparado com o do sistema atual. Se os resultados forem iguais, a parte atualizada é considerada equivalente nesse caso.
+
+\section{Uso do agente de IA}
+
+A atualização será feita com um agente de IA, que trabalha junto com o desenvolvedor, dentro do ambiente de desenvolvimento. O processo tem cinco passos:
 
 \begin{enumerate}
     \item entender o sistema: o agente lê o código e explica o que cada parte faz;
-    \item criar testes antes de mudar o código, para guardar o comportamento atual;
+    \item criar os testes antes de mudar o código, com base nos resultados do sistema atual;
     \item pedir a atualização em partes pequenas, e não o sistema inteiro de uma vez;
     \item rodar os testes depois de cada parte;
     \item revisar o resultado e decidir o que aceitar.
 \end{enumerate}
 
+O código só será usado com o agente se o responsável pelo sistema autorizar por escrito. Se o código não puder sair do ambiente da instituição, o estudo será feito apenas com a parte autorizada.
+
 \section{Como será a avaliação}
 
-Cada parte atualizada só é considerada correta se o código compilar, rodar e passar nos testes \cite{pan2024lost}. Além disso:
+Cada parte atualizada só é considerada correta se o código compilar, rodar e passar nos testes \cite{pan2024lost}, ou seja, se der os mesmos resultados do sistema atual nos casos de teste. Além disso:
 
 \begin{itemize}
     \item os testes ficam sob controle do desenvolvedor, e o agente não pode apagá-los ou mudá-los;
-    \item a cobertura de testes não pode cair depois da atualização, como no \citeonline{may2025freshbrew};
-    \item o desenvolvedor confere se o agente não pegou atalhos, como chamar o código antigo em vez de reescrevê-lo.
+    \item os testes devem cobrir cada regra da descrição do sistema atual, e esse conjunto não pode diminuir depois da atualização;
+    \item o desenvolvedor confere se o agente não tomou atalhos, como chamar o código antigo em vez de reescrevê-lo.
 \end{itemize}
 
 Durante o trabalho, cada problema encontrado é registrado e classificado de acordo com os desafios do Quadro~\ref{tab:desafios}. Também são anotados o tempo gasto e o uso do agente, para ter uma ideia do custo.
 
-\section{Cuidados}
-
-O código só será usado com o agente se o responsável pelo sistema autorizar por escrito. Dados sensíveis e senhas não fazem parte do estudo. Se o código não puder sair do ambiente da instituição, o estudo será feito apenas com a parte autorizada.
-
-\section{Limitações}
-
-O estudo observa um sistema, um agente e uma troca de tecnologia. Por isso, os resultados mostram o que aconteceu nesse caso e não valem para todos os sistemas. Estudos parecidos, como o de \citeonline{alves2026legacy}, também tratam seus resultados dessa forma.
+Este estudo tem limites. Ele observa um sistema, um agente e uma troca de tecnologia, então os resultados mostrarão o que aconteceu nesse caso e não valerão para todos os sistemas. Estudos parecidos, como o de \citeonline{alves2026legacy}, também tratam seus resultados dessa forma. O agente pode dar resultados diferentes a cada execução, e a mesma pessoa conduz e avalia o estudo. Além disso, o sistema atual foi feito em Power Apps, e não em código escrito em arquivos, como os sistemas dos estudos citados.

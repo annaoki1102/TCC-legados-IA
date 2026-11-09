@@ -15,10 +15,13 @@ O texto do TCC está em andamento.
 | Arquivo ou pasta | O que tem |
 |------------------|-----------|
 | `TCC.tex` | Versão atual do TCC: arquivo principal, que junta todos os capítulos. |
-| `capitulos/cap1_introducao.tex` | Introdução: problema, objetivos e metodologia. |
+| `capitulos/cap1_introducao.tex` | Introdução: contexto, problema, justificativa, pergunta de pesquisa e organização do trabalho. |
+| `capitulos/objetivos.tex` | Objetivo geral e objetivos específicos. |
 | `capitulos/cap2_*.tex` | Fundamentação teórica: sistemas legados, agentes de IA, verificação e desafios. |
-| `capitulos/proposta.tex` | Proposta e plano de avaliação. |
-| `capitulos/consideracoes_finais.tex` | Considerações finais. |
+| `capitulos/proposta.tex` | Metodologia: tipo de pesquisa, dados sintéticos, processamento dos dados e avaliação. |
+| `capitulos/descricao_sistema.tex` | Descrição do sistema atual, incluída na metodologia. |
+| `capitulos/resultados.tex` | Resultados e considerações finais (a escrever depois do estudo de caso). |
+| `capitulos/consideracoes_finais.tex` | Conclusão. |
 | `TCC.bib` | Referências bibliográficas (BibTeX). |
 | `images/` | Figuras usadas no texto. |
 | `sty/` | Pacotes e estilos (`.sty`) auxiliares. |
