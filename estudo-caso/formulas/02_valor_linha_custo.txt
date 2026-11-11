@@ -1,0 +1,42 @@
+/*
+Regra 2 (media): Valor de cada linha de custo
+Fonte: capitulos/descricao_sistema.tex, secao "Valor de cada linha de custo"
+(Quadro tab:custos).
+
+O valor depende do tipo de custo. O sistema testa os casos em ordem e usa o
+primeiro que se aplica. O resultado aparece em reais.
+  - Seguro viagem: valor do seguro x quantidade de pessoas
+  - Passagem: quantidade de pessoas x passagem individual
+  - Diaria internacional: valor ja convertido para reais, guardado na linha
+  - Diaria nacional (da lista): quantidade de diarias x valor da diaria
+  - Diaria de outro cargo (valor digitado): quantidade de diarias x valor digitado x quantidade de pessoas
+  - Inscricao: valor ja convertido para reais, guardado na linha
+  - Custo complementar: o proprio valor
+
+Tela / controle / propriedade de onde a formula foi copiada: TelaPrestaçãoContas / TextCanvas7_96 / Text
+*/
+
+// Cole abaixo a formula do Power Apps:
+Switch(
+    true;
+    ThisItem.'Tipo de Custo'.Value = "Seguro Viagem";
+    "R$ " & Text(ThisItem.'Valor Seguro Viagem' * ThisItem.'QTD de Pessoas';"[$-pt-BR]#.##0,00");
+
+    ThisItem.'Tipo de Custo'.Value = "Diária" && Not(IsBlank(ThisItem.'Valor em U$ diária internacional'));
+    "R$ " & Text(ThisItem.ValorConvertido;"[$-pt-BR]#.##0,00");
+
+    ThisItem.'Tipo de Custo'.Value = "Passagem";
+    "R$ " & Text(ThisItem.'QTD de Pessoas' * ThisItem.'Passagem individual';"[$-pt-BR]#.##0,00");
+
+    ThisItem.'Tipo de Custo'.Value = "Diária" && IsBlank(ThisItem.ID_Diaria);
+    "R$ " & Text(ThisItem.'QTD de Diárias' * ThisItem.'Valor diária - Outro Cargo' * ThisItem.'QTD de Pessoas';"[$-pt-BR]#.##0,00");
+
+    ThisItem.'Tipo de Custo'.Value = "Diária" && Not(IsBlank(ThisItem.ID_Diaria));
+    "R$ " & Text(ThisItem.'QTD de Diárias' * LookUp(TB_DIARIAS_NACIONAIS;ThisRecord.ID = ThisItem.ID_Diaria; ThisRecord.Valor);"[$-pt-BR]#.##0,00");
+
+    ThisItem.'Tipo de Custo'.Value = "Inscrição";
+    "R$ " & Text(ThisItem.InscricaoConvertida;"[$-pt-BR]#.##0,00");
+
+    !IsBlank(ThisItem.'Valor Custo Complementar');
+    "R$ " & Text(ThisItem.'Valor Custo Complementar';"[$-pt-BR]#.##0,00")
+)

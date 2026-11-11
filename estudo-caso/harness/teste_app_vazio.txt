@@ -1,0 +1,344 @@
+TESTE DAS FÓRMULAS EM UM APP VAZIO DO POWER APPS
+=================================================
+
+Para que serve
+--------------
+Este roteiro monta um app NOVO e VAZIO no Power Apps para rodar as fórmulas
+do SIS Eventos com dados inventados. O resultado de cada fórmula vai ser
+anotado em estudo-caso/resultados_esperados.csv e depois comparado com o
+código novo.
+
+IMPORTANTE:
+- NÃO abra nem altere o app real do SIS Eventos.
+- NÃO conecte este app de teste às listas do SharePoint. Ele usa só coleções
+  criadas na memória, com os dados de estudo-caso/dados/.
+- NÃO publique nem compartilhe o app de teste. Basta salvar.
+
+Os dados das coleções abaixo são os mesmos dos arquivos
+dados/eventos.csv, dados/custos.csv e dados/diarias.csv. Se mudar um CSV,
+mude também aqui (ou peça para gerar este arquivo de novo).
+
+
+PASSO 1 - Criar o app vazio
+---------------------------
+1. Entre em https://make.powerapps.com.
+2. No canto de cima, à direita, confira o ambiente. Se tiver um ambiente
+   pessoal ou de desenvolvedor, use esse, e não o ambiente do sistema real.
+3. No menu da esquerda, clique em "Criar".
+4. Escolha "Aplicativo em branco" e depois "Aplicativo de tela em branco"
+   (Criar).
+5. Dê um nome, por exemplo: "Teste SIS Eventos - dados ficticios".
+   Formato: Tablet. Clique em "Criar".
+6. O Power Apps Studio abre com uma tela vazia (Screen1).
+
+
+PASSO 2 - Colar os dados no App.OnStart
+---------------------------------------
+1. No painel da esquerda ("Modo de exibição de árvore"), clique em "App"
+   (fica acima de Screen1).
+2. Na lista de propriedades (caixa no canto de cima, à esquerda da barra de
+   fórmulas), escolha "OnStart".
+3. Apague o que estiver na barra de fórmulas e cole TODO o bloco abaixo,
+   da linha "ClearCollect(" até "Set(VarAnoExercicioSelecionado; 2026)".
+4. Para rodar: clique nos "..." ao lado de "App" na árvore e escolha
+   "Executar OnStart".
+5. Para conferir: no menu da esquerda, abra "Variáveis" (ícone (x)) >
+   "Coleções". Devem aparecer TB_EVENTOS (10 linhas),
+   TB_PREVISAO_CUSTO_EVENTOS (23 linhas) e TB_DIARIAS_NACIONAIS (3 linhas).
+
+----- INÍCIO DO App.OnStart -----
+ClearCollect(
+    TB_EVENTOS;
+    Table(
+        {ID: 1; nome: "Evento Ficticio Alfa"; DT_Inicio: Date(2026; 3; 10); 'Status de participação': {Value: "Aprovado"}; Excluido: ""};
+        {ID: 2; nome: "Evento Ficticio Beta"; DT_Inicio: Date(2026; 5; 20); 'Status de participação': {Value: "Aprovado"}; Excluido: ""};
+        {ID: 3; nome: "Evento Ficticio Gama"; DT_Inicio: Date(2026; 8; 5); 'Status de participação': {Value: "Aprovado"}; Excluido: ""};
+        {ID: 4; nome: "Evento Ficticio Delta"; DT_Inicio: Date(2026; 4; 15); 'Status de participação': {Value: "Em Aberto"}; Excluido: ""};
+        {ID: 5; nome: "Evento Ficticio Epsilon"; DT_Inicio: Date(2026; 6; 1); 'Status de participação': {Value: "Em Análise"}; Excluido: ""};
+        {ID: 6; nome: "Evento Ficticio Zeta"; DT_Inicio: Date(2026; 7; 12); 'Status de participação': {Value: "Não Aprovado"}; Excluido: ""};
+        {ID: 7; nome: "Evento Ficticio Eta"; DT_Inicio: Date(2025; 9; 9); 'Status de participação': {Value: "Cancelado"}; Excluido: ""};
+        {ID: 8; nome: "Evento Ficticio Teta"; DT_Inicio: Date(2026; 10; 3); 'Status de participação': {Value: "Aprovado para ajustes"}; Excluido: ""};
+        {ID: 9; nome: "Evento Ficticio Iota"; DT_Inicio: Date(2026; 2; 14); 'Status de participação': {Value: "Aprovado"}; Excluido: "*"};
+        {ID: 10; nome: "Evento Ficticio Kapa"; DT_Inicio: Date(2025; 11; 18); 'Status de participação': {Value: "Aprovado"}; Excluido: ""}
+    )
+);;
+
+ClearCollect(
+    TB_PREVISAO_CUSTO_EVENTOS;
+    Table(
+        {ID: 1; ID_EVENTO: 1; Excluido: ""; 'Tipo de Custo': {Value: "Seguro Viagem"}; 'QTD de Pessoas': 2; 'QTD de Diárias': Blank(); ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': 100; 'Passagem individual': Blank(); Realizado: 200};
+        {ID: 2; ID_EVENTO: 1; Excluido: ""; 'Tipo de Custo': {Value: "Passagem"}; 'QTD de Pessoas': 2; 'QTD de Diárias': Blank(); ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': 1000; Realizado: 1900};
+        {ID: 3; ID_EVENTO: 1; Excluido: ""; 'Tipo de Custo': {Value: "Diária"}; 'QTD de Pessoas': 1; 'QTD de Diárias': 3; ID_Diaria: 1; 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': Blank(); Realizado: 900};
+        {ID: 4; ID_EVENTO: 1; Excluido: ""; 'Tipo de Custo': {Value: "Diária"}; 'QTD de Pessoas': 2; 'QTD de Diárias': 2; ID_Diaria: 2; 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': Blank(); Realizado: 1600};
+        {ID: 5; ID_EVENTO: 1; Excluido: ""; 'Tipo de Custo': {Value: "Diária"}; 'QTD de Pessoas': 1; 'QTD de Diárias': 2; ID_Diaria: 3; 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': Blank(); Realizado: 1000};
+        {ID: 6; ID_EVENTO: 1; Excluido: ""; 'Tipo de Custo': {Value: "Diária"}; 'QTD de Pessoas': 2; 'QTD de Diárias': 2; ID_Diaria: Blank(); 'Valor diária - Outro Cargo': 250; 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': Blank(); Realizado: 1000};
+        {ID: 7; ID_EVENTO: 1; Excluido: ""; 'Tipo de Custo': {Value: "Inscrição"}; 'QTD de Pessoas': 1; 'QTD de Diárias': Blank(); ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': "R$"; 'Valor Inscrição': 500; InscricaoConvertida: 500; 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': Blank(); Realizado: 500};
+        {ID: 8; ID_EVENTO: 1; Excluido: ""; 'Tipo de Custo': {Value: ""}; 'QTD de Pessoas': 1; 'QTD de Diárias': Blank(); ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': 150; 'Valor Seguro Viagem': Blank(); 'Passagem individual': Blank(); Realizado: 150};
+        {ID: 9; ID_EVENTO: 1; Excluido: "*"; 'Tipo de Custo': {Value: "Passagem"}; 'QTD de Pessoas': 1; 'QTD de Diárias': Blank(); ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': 800; Realizado: 800};
+        {ID: 10; ID_EVENTO: 2; Excluido: ""; 'Tipo de Custo': {Value: "Diária"}; 'QTD de Pessoas': 1; 'QTD de Diárias': 1; ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': 100; 'Cotação Dolar/Real': 5; ValorConvertido: 500; 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': Blank(); Realizado: 500};
+        {ID: 11; ID_EVENTO: 2; Excluido: ""; 'Tipo de Custo': {Value: "Diária"}; 'QTD de Pessoas': 2; 'QTD de Diárias': 3; ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': 200; 'Cotação Dolar/Real': 5; ValorConvertido: 6000; 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': Blank(); Realizado: 6000};
+        {ID: 12; ID_EVENTO: 2; Excluido: ""; 'Tipo de Custo': {Value: "Inscrição"}; 'QTD de Pessoas': 1; 'QTD de Diárias': Blank(); ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': 5; ValorConvertido: Blank(); 'Moeda  - Inscrição': "US$"; 'Valor Inscrição': 300; InscricaoConvertida: 1500; 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': Blank(); Realizado: 1500};
+        {ID: 13; ID_EVENTO: 2; Excluido: ""; 'Tipo de Custo': {Value: "Passagem"}; 'QTD de Pessoas': 2; 'QTD de Diárias': Blank(); ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': 2500; Realizado: 5000};
+        {ID: 14; ID_EVENTO: 2; Excluido: ""; 'Tipo de Custo': {Value: "Seguro Viagem"}; 'QTD de Pessoas': 2; 'QTD de Diárias': Blank(); ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': 50; 'Passagem individual': Blank(); Realizado: 100};
+        {ID: 15; ID_EVENTO: 4; Excluido: ""; 'Tipo de Custo': {Value: "Passagem"}; 'QTD de Pessoas': 1; 'QTD de Diárias': Blank(); ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': 700; Realizado: Blank()};
+        {ID: 16; ID_EVENTO: 5; Excluido: ""; 'Tipo de Custo': {Value: "Seguro Viagem"}; 'QTD de Pessoas': 1; 'QTD de Diárias': Blank(); ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': 80; 'Passagem individual': Blank(); Realizado: Blank()};
+        {ID: 17; ID_EVENTO: 6; Excluido: ""; 'Tipo de Custo': {Value: "Inscrição"}; 'QTD de Pessoas': 1; 'QTD de Diárias': Blank(); ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': "R$"; 'Valor Inscrição': 400; InscricaoConvertida: 400; 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': Blank(); Realizado: Blank()};
+        {ID: 18; ID_EVENTO: 7; Excluido: ""; 'Tipo de Custo': {Value: "Passagem"}; 'QTD de Pessoas': 1; 'QTD de Diárias': Blank(); ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': 900; Realizado: Blank()};
+        {ID: 19; ID_EVENTO: 8; Excluido: ""; 'Tipo de Custo': {Value: ""}; 'QTD de Pessoas': 1; 'QTD de Diárias': Blank(); ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': 250; 'Valor Seguro Viagem': Blank(); 'Passagem individual': Blank(); Realizado: Blank()};
+        {ID: 20; ID_EVENTO: 9; Excluido: ""; 'Tipo de Custo': {Value: "Passagem"}; 'QTD de Pessoas': 1; 'QTD de Diárias': Blank(); ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': 1200; Realizado: 1200};
+        {ID: 21; ID_EVENTO: 9; Excluido: ""; 'Tipo de Custo': {Value: "Seguro Viagem"}; 'QTD de Pessoas': 1; 'QTD de Diárias': Blank(); ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': 60; 'Passagem individual': Blank(); Realizado: 60};
+        {ID: 22; ID_EVENTO: 10; Excluido: ""; 'Tipo de Custo': {Value: "Passagem"}; 'QTD de Pessoas': 1; 'QTD de Diárias': Blank(); ID_Diaria: Blank(); 'Valor diária - Outro Cargo': Blank(); 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': 600; Realizado: 600};
+        {ID: 23; ID_EVENTO: 10; Excluido: ""; 'Tipo de Custo': {Value: "Diária"}; 'QTD de Pessoas': 1; 'QTD de Diárias': 2; ID_Diaria: Blank(); 'Valor diária - Outro Cargo': 200; 'Valor em U$ diária internacional': Blank(); 'Cotação Dolar/Real': Blank(); ValorConvertido: Blank(); 'Moeda  - Inscrição': Blank(); 'Valor Inscrição': Blank(); InscricaoConvertida: Blank(); 'Valor Custo Complementar': Blank(); 'Valor Seguro Viagem': Blank(); 'Passagem individual': Blank(); Realizado: 400}
+    )
+);;
+
+ClearCollect(
+    TB_DIARIAS_NACIONAIS;
+    Table(
+        {ID: 1; Cidade: "Cidade Ficticia Norte"; Valor: 300; Excluido: ""};
+        {ID: 2; Cidade: "Cidade Ficticia Sul"; Valor: 400; Excluido: ""};
+        {ID: 3; Cidade: "Cidade Ficticia Leste"; Valor: 500; Excluido: "*"}
+    )
+);;
+
+Set(VarAnoExercicioSelecionado; 2026)
+----- FIM DO App.OnStart -----
+
+
+PASSO 3 - Galeria da fórmula 01 (registros excluídos / eventos por ano)
+-----------------------------------------------------------------------
+1. Selecione Screen1. Menu "Inserir" > "Galeria vertical" (se perguntar a
+   fonte de dados, feche a janela sem escolher nada).
+2. Com a galeria selecionada, escolha a propriedade "Items" e cole a
+   fórmula 01, sem mudar nada:
+
+----- INÍCIO DA FÓRMULA 01 (Items da galeria) -----
+With(
+    {
+        eventosNaoExcluidos: Filter(TB_EVENTOS; Excluido <> "*");
+        anosDistintos: Distinct(
+            AddColumns(
+                TB_EVENTOS;
+                AnoEvento; Year(DT_Inicio)
+            );
+            AnoEvento
+        )
+    };
+    Sort(
+        Filter(
+            AddColumns(
+                anosDistintos;
+                QTD_EVENTOS;
+                CountIf(eventosNaoExcluidos; Year(DT_Inicio) = Value);
+                EM_ABERTO;
+                CountIf(eventosNaoExcluidos; Year(DT_Inicio) = Value && 'Status de participação'.Value = "Em Aberto");
+                EM_ANALISE;
+                CountIf(eventosNaoExcluidos; Year(DT_Inicio) = Value && 'Status de participação'.Value = "Em Análise");
+                NAO_APROVADO;
+                CountIf(eventosNaoExcluidos; Year(DT_Inicio) = Value && 'Status de participação'.Value = "Não Aprovado");
+                APROVADO;
+                CountIf(eventosNaoExcluidos; Year(DT_Inicio) = Value && 'Status de participação'.Value = "Aprovado");
+                CANCELADO;
+                CountIf(eventosNaoExcluidos; Year(DT_Inicio) = Value && 'Status de participação'.Value = "Cancelado");
+                APROVADO_AJUSTE;
+                CountIf(eventosNaoExcluidos; Year(DT_Inicio) = Value && 'Status de participação'.Value = "Aprovado para ajustes")
+            );
+            ThisRecord.QTD_EVENTOS <> 0
+        );
+        Value;
+        SortOrder.Descending
+    )
+)
+----- FIM DA FÓRMULA 01 -----
+
+3. Dentro da galeria, apague os controles que vieram prontos, menos um
+   rótulo (Label). Se não sobrar nenhum, selecione a galeria e use
+   "Inserir" > "Rótulo de texto".
+4. No rótulo, propriedade "Text", cole o texto abaixo (ele só mostra as
+   colunas que a fórmula 01 criou):
+
+"Ano " & ThisItem.Value & " | Total: " & ThisItem.QTD_EVENTOS & " | Em Aberto: " & ThisItem.EM_ABERTO & " | Em Análise: " & ThisItem.EM_ANALISE & " | Não Aprovado: " & ThisItem.NAO_APROVADO & " | Aprovado: " & ThisItem.APROVADO & " | Cancelado: " & ThisItem.CANCELADO & " | Aprovado para ajustes: " & ThisItem.APROVADO_AJUSTE
+
+5. Aumente a largura do rótulo para caber o texto. Cada linha da galeria é
+   um ano.
+
+
+PASSO 4 - Galeria da fórmula 02 (valor de cada linha de custo)
+--------------------------------------------------------------
+1. Insira outra "Galeria vertical" ao lado ou abaixo da primeira.
+2. Propriedade "Items" da galeria:
+
+TB_PREVISAO_CUSTO_EVENTOS
+
+3. Deixe dois rótulos dentro da galeria.
+4. Primeiro rótulo, propriedade "Text" (só para saber qual linha é):
+
+"Custo " & ThisItem.ID & " | evento " & ThisItem.ID_EVENTO & " | " & ThisItem.'Tipo de Custo'.Value & If(ThisItem.Excluido = "*"; " | EXCLUÍDO"; "")
+
+5. Segundo rótulo, propriedade "Text", cole a fórmula 02, sem mudar nada:
+
+----- INÍCIO DA FÓRMULA 02 (Text do segundo rótulo) -----
+Switch(
+    true;
+    ThisItem.'Tipo de Custo'.Value = "Seguro Viagem";
+    "R$ " & Text(ThisItem.'Valor Seguro Viagem' * ThisItem.'QTD de Pessoas';"[$-pt-BR]#.##0,00");
+
+    ThisItem.'Tipo de Custo'.Value = "Diária" && Not(IsBlank(ThisItem.'Valor em U$ diária internacional'));
+    "R$ " & Text(ThisItem.ValorConvertido;"[$-pt-BR]#.##0,00");
+
+    ThisItem.'Tipo de Custo'.Value = "Passagem";
+    "R$ " & Text(ThisItem.'QTD de Pessoas' * ThisItem.'Passagem individual';"[$-pt-BR]#.##0,00");
+
+    ThisItem.'Tipo de Custo'.Value = "Diária" && IsBlank(ThisItem.ID_Diaria);
+    "R$ " & Text(ThisItem.'QTD de Diárias' * ThisItem.'Valor diária - Outro Cargo' * ThisItem.'QTD de Pessoas';"[$-pt-BR]#.##0,00");
+
+    ThisItem.'Tipo de Custo'.Value = "Diária" && Not(IsBlank(ThisItem.ID_Diaria));
+    "R$ " & Text(ThisItem.'QTD de Diárias' * LookUp(TB_DIARIAS_NACIONAIS;ThisRecord.ID = ThisItem.ID_Diaria; ThisRecord.Valor);"[$-pt-BR]#.##0,00");
+
+    ThisItem.'Tipo de Custo'.Value = "Inscrição";
+    "R$ " & Text(ThisItem.InscricaoConvertida;"[$-pt-BR]#.##0,00");
+
+    !IsBlank(ThisItem.'Valor Custo Complementar');
+    "R$ " & Text(ThisItem.'Valor Custo Complementar';"[$-pt-BR]#.##0,00")
+)
+----- FIM DA FÓRMULA 02 -----
+
+
+PASSO 5 - Rótulo da fórmula 03 (total previsto)
+-----------------------------------------------
+1. Selecione Screen1 (fora das galerias). "Inserir" > "Rótulo de texto".
+2. Propriedade "Text", cole a fórmula 03, sem mudar nada:
+
+----- INÍCIO DA FÓRMULA 03 (Text do rótulo) -----
+Text(
+    Sum(
+        ForAll(
+            Filter(
+                TB_EVENTOS;
+                'Status de participação'.Value = "Aprovado" &&
+                Year(DT_Inicio) = VarAnoExercicioSelecionado &&
+                Excluido <> "*"
+            );
+            With(
+                {
+                    custos: Filter(
+                        TB_PREVISAO_CUSTO_EVENTOS As PC;
+                        PC.ID_EVENTO = ID && PC.Excluido <> "*"
+                    )
+                };
+                Sum(
+                    custos;
+                    Round('QTD de Diárias' * 'Valor diária - Outro Cargo' * 'QTD de Pessoas'; 2) +
+                    Round(
+                        'QTD de Diárias' *
+                        LookUp(
+                            Filter(TB_DIARIAS_NACIONAIS; Excluido <> "*");
+                            ID = ID_Diaria;
+                            Valor
+                        ) * 'QTD de Pessoas'; 2
+                    ) +
+                    Round(
+                        ('Cotação Dolar/Real' * 'Valor em U$ diária internacional') *
+                        ('QTD de Diárias' * 'QTD de Pessoas'); 2
+                    ) +
+                    If(
+                        'Moeda  - Inscrição' = "US$";
+                        Round('Cotação Dolar/Real' * 'Valor Inscrição'; 2);
+                        Round('Valor Inscrição'; 2)
+                    ) +
+                    Round('Valor Custo Complementar'; 2) +
+                    Round('Valor Seguro Viagem' * 'QTD de Pessoas'; 2) +
+                    Round('Passagem individual' * 'QTD de Pessoas'; 2)
+                )
+            )
+        );ThisRecord.Value);
+    "[$-pt-BR]R$ #.##0,00"
+)
+----- FIM DA FÓRMULA 03 -----
+
+
+PASSO 6 (opcional) - Rótulo da fórmula 04 (total realizado)
+-----------------------------------------------------------
+Mesmo jeito do passo 5, em outro rótulo:
+
+----- INÍCIO DA FÓRMULA 04 (Text do rótulo) -----
+Coalesce(
+    "R$ " & Text(
+        Sum(
+            Filter(
+                TB_PREVISAO_CUSTO_EVENTOS As PC;
+                PC.Excluido <> "*" &&
+                PC.ID_EVENTO in
+                    ForAll(
+                        Filter(
+                            TB_EVENTOS;
+                            'Status de participação'.Value = "Aprovado" &&
+                            Year(DT_Inicio) = VarAnoExercicioSelecionado &&
+                            Excluido <> "*"
+                        );
+                        ID
+                    )
+            );
+            Realizado
+        );
+        "[$-pt-BR]#.##0,00"
+    );
+    "-"
+)
+----- FIM DA FÓRMULA 04 -----
+
+
+PASSO 7 - Anotar os resultados
+------------------------------
+1. Os resultados aparecem direto no Studio. Se quiser, aperte F5 para ver
+   em modo de execução (Esc para voltar).
+2. Anote cada resultado em estudo-caso/resultados_esperados.csv, uma linha
+   por resultado, por exemplo:
+     01,ano 2026 - Aprovado,<o número que apareceu>
+     02,custo 4,<o texto que apareceu, ex.: R$ 800,00>
+     03,total 2026,<o texto que apareceu>
+   Copie o texto como aparece na tela. Se tiver vírgula no valor, coloque
+   o campo entre aspas: "R$ 800,00".
+3. Para testar o ano 2025: no App.OnStart troque 2026 por 2025 na última
+   linha, rode "Executar OnStart" de novo e anote os totais.
+4. Salve o app (Ctrl+S). Não publique.
+
+
+Se der erro
+-----------
+- Separadores: este texto usa ";" entre argumentos e ";;" entre comandos,
+  como o app real (Power Apps em português). Se o seu Studio estiver em
+  inglês e acusar erro, troque ";;" por ";" e ";" por "," (com cuidado:
+  só fora das aspas).
+- Se uma fórmula ficar sublinhada em vermelho, passe o mouse em cima,
+  copie a mensagem e anote. Não corrija a fórmula sem anotar: a ideia é
+  testar a fórmula como ela é.
+- Se as coleções não aparecerem, rode "Executar OnStart" de novo.
+
+
+Adaptações feitas para rodar fora do app real
+---------------------------------------------
+As fórmulas 01, 02, 03 e 04 foram coladas sem mudança. O que muda é o
+ambiente em volta delas:
+1. Dados: as listas do SharePoint viraram coleções com o mesmo nome
+   (TB_EVENTOS, TB_PREVISAO_CUSTO_EVENTOS, TB_DIARIAS_NACIONAIS), criadas
+   no App.OnStart com dados inventados. Só têm os campos que as fórmulas
+   usam (e "nome" e "Cidade", para identificar).
+2. Campos de escolha: 'Status de participação' e 'Tipo de Custo' foram
+   criados como registro {Value: "..."}, porque as fórmulas leem .Value.
+   O custo complementar tem 'Tipo de Custo' = {Value: ""} (tipo vazio).
+3. 'Moeda  - Inscrição' (com dois espaços) foi criado como texto ("US$" ou
+   "R$"), porque a fórmula 03 compara o campo direto com "US$", sem .Value.
+4. Campos vazios: números e textos vazios são Blank(), como numa lista do
+   SharePoint. O campo Excluido usa "" (não excluído) ou "*" (excluído).
+5. VarAnoExercicioSelecionado é definida no OnStart. No app real ela é
+   definida por outra tela ou controle (ainda não foi visto onde).
+6. Controles: no app real a fórmula 02 fica num controle moderno
+   TextCanvas (TextCanvas7_96) e as fórmulas 03 e 04 em botões modernos
+   (ButtonCanvas6_3 e ButtonCanvas6_4). Aqui foram usados rótulos comuns,
+   que também têm a propriedade Text.
+7. A galeria da fórmula 02 mostra TODAS as linhas de custo, inclusive as
+   excluídas e as de eventos não aprovados. No app real o Items dessa
+   galeria provavelmente filtra por evento (ainda não foi visto).
+8. Foram acrescentados só para ver o resultado: o rótulo de texto da
+   galeria 01 e o primeiro rótulo da galeria 02 (não fazem parte das regras).

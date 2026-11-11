@@ -1,6 +1,6 @@
 % TODO: confirmar com o orientador e com o responsável pelo sistema qual será o caso (sistema, autorização por escrito, uso e se o código pode ser usado com uma IA externa).
 % TODO: confirmar com o responsável pelo sistema se o nome SIS Eventos e a instituição podem ser citados ou se precisam ficar anônimos.
-% TODO: informar o tamanho aproximado do sistema (número de telas, listas e fórmulas) e as funcionalidades escolhidas.
+% TODO: informar o tamanho aproximado do sistema (número de telas, listas e fórmulas).
 Este capítulo descreve como o estudo de caso será feito.
 
 \section{Tipo de pesquisa}
@@ -9,9 +9,9 @@ Este trabalho tem abordagem qualitativa e caráter exploratório. Ele tem duas p
 
 \section{O estudo de caso}
 
-Para observar na prática os desafios relatados na literatura, este trabalho propõe um estudo de caso com um sistema real. O sistema escolhido é o SIS Eventos, usado para registrar e aprovar a participação de pessoas em eventos. Ele foi feito no Microsoft Power Apps, com dados em listas do SharePoint, e será atualizado para \textbf{[tecnologia de destino]}.
+Para observar na prática os desafios relatados na literatura, este trabalho propõe um estudo de caso com um sistema real. O sistema escolhido é o SIS Eventos, usado para registrar e aprovar a participação de pessoas em eventos. Ele foi feito no Microsoft Power Apps, com dados em listas do SharePoint, e será atualizado para Python, com testes automáticos.
 
-Serão atualizadas poucas funcionalidades, com regras de negócio e graus de complexidade diferentes: \textbf{[funcionalidade simples]}, \textbf{[funcionalidade média]} e \textbf{[funcionalidade complexa]}.
+Serão atualizadas três regras do sistema, com graus de complexidade diferentes: o tratamento dos registros excluídos (simples), o valor de cada linha de custo (média) e o total previsto de custos (complexa). Essas regras estão descritas na seção seguinte.
 
 O responsável pelo sistema é o \textit{stakeholder} do trabalho. Ele autoriza o uso do sistema, explica as regras importantes e ajuda a conferir se o resultado está correto.
 
@@ -25,7 +25,7 @@ O estudo de caso usará dados sintéticos, ou seja, dados inventados para o estu
 
 No sistema atual, os dados ficam em listas do SharePoint, e as contas ficam dentro de controles das telas do Power Apps, e não em um lugar só. Cada caso de teste será executado no sistema atual, e o resultado será anotado, como o valor de cada linha de custo e o total previsto.
 
-No sistema novo, em \textbf{[tecnologia de destino]}, os mesmos dados serão processados pelo código feito com a ajuda do agente. O resultado de cada caso será comparado com o do sistema atual. Se os resultados forem iguais, a parte atualizada é considerada equivalente nesse caso.
+No sistema novo, em Python, os mesmos dados serão processados pelo código feito com a ajuda do agente. O resultado de cada caso será comparado com o do sistema atual. Se os resultados forem iguais, a parte atualizada é considerada equivalente nesse caso.
 
 \section{Uso do agente de IA}
 

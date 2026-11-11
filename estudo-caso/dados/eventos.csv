@@ -1,0 +1,11 @@
+ID,nome,DT_Inicio,Status de participação,Excluido
+1,Evento Ficticio Alfa,2026-03-10,Aprovado,
+2,Evento Ficticio Beta,2026-05-20,Aprovado,
+3,Evento Ficticio Gama,2026-08-05,Aprovado,
+4,Evento Ficticio Delta,2026-04-15,Em Aberto,
+5,Evento Ficticio Epsilon,2026-06-01,Em Análise,
+6,Evento Ficticio Zeta,2026-07-12,Não Aprovado,
+7,Evento Ficticio Eta,2025-09-09,Cancelado,
+8,Evento Ficticio Teta,2026-10-03,Aprovado para ajustes,
+9,Evento Ficticio Iota,2026-02-14,Aprovado,*
+10,Evento Ficticio Kapa,2025-11-18,Aprovado,

@@ -1,0 +1,65 @@
+/*
+Regra 3 (complexa): Total previsto de custos
+Fonte: capitulos/descricao_sistema.tex, secao "Total previsto de custos".
+
+Calcula o total previsto de custos dos eventos aprovados de um ano. Para cada
+evento aprovado, soma as linhas de custo previstas que nao foram excluidas.
+Cada linha soma sete partes:
+  - diaria de outro cargo: quantidade de diarias x valor digitado x quantidade de pessoas
+  - diaria nacional: quantidade de diarias x valor da lista x quantidade de pessoas
+  - diaria internacional: cotacao do dolar x valor em dolar x quantidade de diarias x quantidade de pessoas
+  - inscricao: o valor, multiplicado pela cotacao do dolar quando a moeda e o dolar
+  - custo complementar: o proprio valor
+  - seguro viagem: valor x quantidade de pessoas
+  - passagem: passagem individual x quantidade de pessoas
+Cada parte e arredondada para duas casas decimais, e o total aparece em reais.
+A conta soma todos os campos da linha, sem olhar o tipo de custo.
+
+Tela / controle / propriedade de onde a formula foi copiada: TelaPrestaçãoContas / ButtonCanvas6_3 / Text (confirmar)
+*/
+
+// Cole abaixo a formula do Power Apps:
+Text(
+    Sum(
+        ForAll(
+            Filter(
+                TB_EVENTOS;
+                'Status de participação'.Value = "Aprovado" &&
+                Year(DT_Inicio) = VarAnoExercicioSelecionado &&
+                Excluido <> "*"
+            );
+            With(
+                {
+                    custos: Filter(
+                        TB_PREVISAO_CUSTO_EVENTOS As PC;
+                        PC.ID_EVENTO = ID && PC.Excluido <> "*"
+                    )
+                };
+                Sum(
+                    custos;
+                    Round('QTD de Diárias' * 'Valor diária - Outro Cargo' * 'QTD de Pessoas'; 2) +
+                    Round(
+                        'QTD de Diárias' *
+                        LookUp(
+                            Filter(TB_DIARIAS_NACIONAIS; Excluido <> "*");
+                            ID = ID_Diaria;
+                            Valor
+                        ) * 'QTD de Pessoas'; 2
+                    ) +
+                    Round(
+                        ('Cotação Dolar/Real' * 'Valor em U$ diária internacional') *
+                        ('QTD de Diárias' * 'QTD de Pessoas'); 2
+                    ) +
+                    If(
+                        'Moeda  - Inscrição' = "US$";
+                        Round('Cotação Dolar/Real' * 'Valor Inscrição'; 2);
+                        Round('Valor Inscrição'; 2)
+                    ) +
+                    Round('Valor Custo Complementar'; 2) +
+                    Round('Valor Seguro Viagem' * 'QTD de Pessoas'; 2) +
+                    Round('Passagem individual' * 'QTD de Pessoas'; 2)
+                )
+            )
+        );ThisRecord.Value);
+    "[$-pt-BR]R$ #.##0,00"
+)

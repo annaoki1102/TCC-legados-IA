@@ -1,0 +1,34 @@
+/*
+Regra extra: Total realizado
+Fonte: tela de prestacao de contas do sistema (ainda nao descrita em capitulos/descricao_sistema.tex).
+
+Soma o campo Realizado das linhas de custo dos eventos aprovados de um ano,
+sem os registros excluidos.
+
+Tela / controle / propriedade de onde a formula foi copiada: TelaPrestaçãoContas / ButtonCanvas6_4 / Text (confirmar)
+*/
+
+// Cole abaixo a formula do Power Apps:
+Coalesce(
+    "R$ " & Text(
+        Sum(
+            Filter(
+                TB_PREVISAO_CUSTO_EVENTOS As PC;
+                PC.Excluido <> "*" &&
+                PC.ID_EVENTO in
+                    ForAll(
+                        Filter(
+                            TB_EVENTOS;
+                            'Status de participação'.Value = "Aprovado" &&
+                            Year(DT_Inicio) = VarAnoExercicioSelecionado &&
+                            Excluido <> "*"
+                        );
+                        ID
+                    )
+            );
+            Realizado
+        );
+        "[$-pt-BR]#.##0,00"
+    );
+    "-"
+)

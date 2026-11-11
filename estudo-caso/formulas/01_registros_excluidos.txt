@@ -1,0 +1,48 @@
+/*
+Regra 1 (simples): Registros excluidos
+Fonte: capitulos/descricao_sistema.tex, secao "Registros excluidos".
+
+As listas tem um campo chamado Excluido. Os eventos, os custos e as diarias
+marcados com um asterisco (*) nesse campo sao ignorados nas listas de escolha
+e nas contas.
+
+Tela / controle / propriedade de onde a formula foi copiada: TelaExercícios / Gallery2_6 / Items
+*/
+
+// Cole abaixo a formula do Power Apps:
+With(
+    {
+        eventosNaoExcluidos: Filter(TB_EVENTOS; Excluido <> "*");
+        anosDistintos: Distinct(
+            AddColumns(
+                TB_EVENTOS;
+                AnoEvento; Year(DT_Inicio)
+            );
+            AnoEvento
+        )
+    };
+    Sort(
+        Filter(
+            AddColumns(
+                anosDistintos;
+                QTD_EVENTOS;
+                CountIf(eventosNaoExcluidos; Year(DT_Inicio) = Value);
+                EM_ABERTO;
+                CountIf(eventosNaoExcluidos; Year(DT_Inicio) = Value && 'Status de participação'.Value = "Em Aberto");
+                EM_ANALISE;
+                CountIf(eventosNaoExcluidos; Year(DT_Inicio) = Value && 'Status de participação'.Value = "Em Análise");
+                NAO_APROVADO;
+                CountIf(eventosNaoExcluidos; Year(DT_Inicio) = Value && 'Status de participação'.Value = "Não Aprovado");
+                APROVADO;
+                CountIf(eventosNaoExcluidos; Year(DT_Inicio) = Value && 'Status de participação'.Value = "Aprovado");
+                CANCELADO;
+                CountIf(eventosNaoExcluidos; Year(DT_Inicio) = Value && 'Status de participação'.Value = "Cancelado");
+                APROVADO_AJUSTE;
+                CountIf(eventosNaoExcluidos; Year(DT_Inicio) = Value && 'Status de participação'.Value = "Aprovado para ajustes")
+            );
+            ThisRecord.QTD_EVENTOS <> 0
+        );
+        Value;
+        SortOrder.Descending
+    )
+)
