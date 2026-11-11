@@ -2,7 +2,6 @@
 
 \subsection{Finalidade e usuários}
 
-% TODO: se o responsável autorizar, trocar "uma instituição pública" pelo nome da instituição.
 O SIS Eventos é usado em uma instituição pública para registrar e aprovar a participação de pessoas em eventos. Quem tem interesse em ir a um evento pela instituição cadastra um pedido no sistema, com dados como o evento, a data, a passagem e os valores. O gabinete usa o sistema para registrar e acompanhar esses eventos, e a aprovação é feita pelo presidente. O sistema também tem cadastros de áreas requisitantes, de pontos focais por área e de permissões dos usuários.
 
 \subsection{Tecnologia e estrutura}
@@ -21,7 +20,7 @@ Esta seção descreve as regras que foram lidas no código do sistema, no editor
 
 \subsubsection{Registros excluídos}
 
-As listas têm um campo chamado Excluido. Os eventos, os custos e as diárias marcados com um asterisco (*) nesse campo são ignorados nas listas de escolha e nas contas.
+As listas têm um campo chamado Excluido. Os eventos, os custos e as diárias marcados com um asterisco (*) nesse campo são ignorados nas regras 01, 03 e 04. A regra 02 não olha esse campo: ela calcula o valor da linha de custo mesmo quando a linha está excluída, e usa o valor da diária da lista mesmo quando a diária está excluída.
 
 \subsubsection{Diárias nacionais por cargo}
 
@@ -30,9 +29,6 @@ Em um evento nacional, a pessoa escolhe o cargo ou função. O sistema então mo
 \subsubsection{Valor de cada linha de custo}
 
 O valor de cada linha de custo depende do tipo de custo, como mostra o Quadro~\ref{tab:custos}. O sistema testa os casos em ordem e usa o primeiro que se aplica. O resultado aparece em reais.
-
-% TODO: confirmar com o responsável pelo sistema se o valor da linha é "por pessoa"
-% (na diária nacional, a conta da linha não multiplica pela quantidade de pessoas, mas o total multiplica).
 
 \begin{table}[htb]
 \centering
@@ -44,10 +40,10 @@ O valor de cada linha de custo depende do tipo de custo, como mostra o Quadro~\r
 \textbf{Tipo de custo} & \textbf{Como o valor é calculado} \\
 \midrule
 Seguro viagem & valor do seguro $\times$ quantidade de pessoas \\
-Passagem & quantidade de pessoas $\times$ passagem individual \\
 Diária internacional & valor já convertido para reais, guardado na linha \\
-Diária nacional (da lista) & quantidade de diárias $\times$ valor da diária \\
+Passagem & quantidade de pessoas $\times$ passagem individual \\
 Diária de outro cargo (valor digitado) & quantidade de diárias $\times$ valor digitado $\times$ quantidade de pessoas \\
+Diária nacional (da lista) & quantidade de diárias $\times$ valor da diária \\
 Inscrição & valor já convertido para reais, guardado na linha \\
 Custo complementar & o próprio valor \\
 \bottomrule
@@ -72,8 +68,10 @@ O sistema calcula o total previsto de custos dos eventos aprovados de um ano. Pa
 
 Cada parte é arredondada para duas casas decimais, e o total aparece em reais. Essa conta soma todos os campos da linha, sem olhar o tipo de custo.
 
-% TODO: confirmar de onde vêm os campos de valor convertido (ValorConvertido e InscricaoConvertida).
+\subsubsection{Total realizado}
+
+O sistema também mostra o total realizado dos eventos aprovados de um ano. Ele soma o campo Realizado das linhas de custo que não foram excluídas, dos eventos aprovados e não excluídos daquele ano. As linhas com o campo Realizado vazio ficam de fora da soma.
 
 \subsection{Como as regras aparecem no código}
 
-As contas ficam dentro de controles das telas, como galerias, botões e campos de texto, e não em um lugar só. A busca no editor encontrou 39 ocorrências da lista de diárias nacionais e 88 da quantidade de pessoas, em várias telas. A fórmula que monta a lista de diárias nacionais tem três casos com as mesmas contas e condições diferentes. O editor também avisa que há controles com versões mais recentes disponíveis, como 20 controles na tela de exercícios. Esses pontos serão observados no estudo de caso.
+As contas ficam dentro de controles das telas, como galerias, botões e campos de texto, e não em um lugar só. A busca no editor encontrou 39 ocorrências da lista de diárias nacionais e 88 da quantidade de pessoas, em várias telas. A fórmula que monta a lista de diárias nacionais tem três casos com as mesmas contas e condições diferentes. O editor também avisa que há controles com versões mais recentes disponíveis, como 20 controles na tela de exercícios. Esses pontos foram observados no estudo de caso, descrito no Capítulo~\ref{cap:resultados}.

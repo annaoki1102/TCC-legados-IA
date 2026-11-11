@@ -2,8 +2,12 @@ Este trabalho teve como objetivo entender os desafios de atualizar sistemas lega
 
 Na literatura, encontramos desafios em seis pontos: tamanho do sistema, complexidade das funcionalidades, regras escondidas, atalhos do agente, linguagens antigas e custo. Nos estudos lidos, o resultado do agente foi verificado de alguma forma, e os testes foram uma das formas usadas para isso.
 
-O estudo de caso foi proposto para observar esses desafios em um sistema real, o SIS Eventos. A proposta é usar o agente em partes pequenas, proteger os testes, comparar os resultados com os do sistema atual e registrar cada problema encontrado.
+No estudo de caso, quatro regras do SIS Eventos foram convertidas do Power Fx para Python, com o agente Claude Code. Os resultados esperados vieram de um app vazio do Power Apps, com dados inventados. Foram 42 testes, e os 42 passaram. Cada regra passou na primeira tentativa.
 
-% TODO: depois do estudo de caso, resumir aqui o que foi encontrado e o que o desenvolvedor pode fazer.
+Mesmo assim, a leitura das fórmulas mostrou comportamentos escondidos. A regra 02 não olha o campo de registro excluído, não multiplica a diária nacional pelas pessoas e usa uma diária excluída. A mesma conta aparece nas regras 02 e 03, feita de jeitos diferentes. E não sabemos de onde vêm dois campos de valor convertido. Esses pontos não apareceram porque um teste falhou. Eles apareceram porque as fórmulas foram lidas com atenção.
 
-Como trabalhos futuros, o mesmo método pode ser aplicado em outros sistemas, com outros agentes e outras trocas de tecnologia, para comparar os resultados.
+Respondendo à pergunta de pesquisa: neste estudo, o principal desafio observado foi o das regras escondidas do Quadro~\ref{tab:desafios}. Nos casos testados, o agente deu os mesmos resultados do sistema atual. A dificuldade estava em saber se os testes cobriam o suficiente e em entender regras que estavam espalhadas ou que dependiam de partes do sistema que não foram vistas. Os outros desafios do quadro não foram observados ou não foram medidos neste estudo.
+
+O estudo tem limites. Os dados foram inventados, e o agente que fez a conversão também ajudou a criar os dados e viu os resultados esperados. Foram só quatro regras de um sistema maior, e nenhum caso testou centavos ou arredondamento. Por isso, passar de primeira não permite dizer que a conversão é fácil ou difícil em geral. Alguns pontos das regras também ficaram sem confirmação, e eles estão listados na Seção~\ref{sec:nao-verificados}.
+
+Como trabalhos futuros, sugerimos converter mais regras do mesmo sistema, usar dados reais com a autorização do responsável, repetir o estudo com outros agentes e medir o tempo gasto em cada etapa.

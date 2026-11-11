@@ -1,1 +1,42 @@
-regra,caso,resultado_sistema_atual
+regra,caso,resultado_sistema_atual,texto_na_tela
+01,ano 2026 - Total,7,7
+01,ano 2026 - Em Aberto,1,1
+01,ano 2026 - Em Análise,1,1
+01,ano 2026 - Não Aprovado,1,1
+01,ano 2026 - Aprovado,3,3
+01,ano 2026 - Cancelado,0,0
+01,ano 2026 - Aprovado para ajustes,1,1
+01,ano 2025 - Total,2,2
+01,ano 2025 - Em Aberto,0,0
+01,ano 2025 - Em Análise,0,0
+01,ano 2025 - Não Aprovado,0,0
+01,ano 2025 - Aprovado,1,1
+01,ano 2025 - Cancelado,1,1
+01,ano 2025 - Aprovado para ajustes,0,0
+02,custo 1,200.00,"R$ 200,00"
+02,custo 2,2000.00,"R$ 2.000,00"
+02,custo 3,900.00,"R$ 900,00"
+02,custo 4,800.00,"R$ 800,00"
+02,custo 5,1000.00,"R$ 1.000,00"
+02,custo 6,1000.00,"R$ 1.000,00"
+02,custo 7,500.00,"R$ 500,00"
+02,custo 8,150.00,"R$ 150,00"
+02,custo 9,800.00,"R$ 800,00"
+02,custo 10,500.00,"R$ 500,00"
+02,custo 11,6000.00,"R$ 6.000,00"
+02,custo 12,1500.00,"R$ 1.500,00"
+02,custo 13,5000.00,"R$ 5.000,00"
+02,custo 14,100.00,"R$ 100,00"
+02,custo 15,700.00,"R$ 700,00"
+02,custo 16,80.00,"R$ 80,00"
+02,custo 17,400.00,"R$ 400,00"
+02,custo 18,900.00,"R$ 900,00"
+02,custo 19,250.00,"R$ 250,00"
+02,custo 20,1200.00,"R$ 1.200,00"
+02,custo 21,60.00,"R$ 60,00"
+02,custo 22,600.00,"R$ 600,00"
+02,custo 23,400.00,"R$ 400,00"
+03,ano 2026,19450.00,"R$ 19.450,00"
+03,ano 2025,1000.00,"R$ 1.000,00"
+04,ano 2026,20350.00,"R$ 20.350,00"
+04,ano 2025,1000.00,"R$ 1.000,00"
