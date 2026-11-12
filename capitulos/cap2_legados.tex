@@ -1,18 +1,19 @@
-Este capítulo apresenta a base teórica do trabalho: o que são sistemas legados e modernização, como agentes de IA são usados nessa tarefa, como o resultado é verificado e quais desafios a literatura relata.
+Este capítulo dá a base para o estudo de caso. O primeiro objetivo específico deste trabalho é reunir o que a literatura já relata sobre o uso de agentes de IA na modernização de sistemas legados. A introdução apresentou o assunto de forma geral, e aqui ele é desenvolvido em quatro partes: como a modernização aparece nos estudos, como os agentes de IA são usados nessa tarefa, como o resultado é verificado e quais desafios a literatura relata. O capítulo termina com um quadro desses desafios, que guia o que foi observado no estudo de caso.
 
-Esta revisão reúne estudos publicados entre 2024 e 2026 sobre modernização de sistemas legados com agentes de IA. A busca foi feita no Google e no Google Acadêmico, e teve o apoio de uma ferramenta de IA. Foram escolhidos os estudos que tratam de migração, atualização ou documentação de código legado com o uso de agentes ou modelos de linguagem e que relatam resultados ou dificuldades. Esta não é uma revisão sistemática, por isso pode não incluir todos os estudos da área.
+Os estudos reunidos aqui foram publicados entre 2024 e 2026. A busca foi feita no Google e no Google Acadêmico, com o apoio de uma ferramenta de IA. Foram escolhidos os estudos que tratam de migração, atualização ou documentação de código legado com o uso de agentes ou modelos de linguagem e que relatam resultados ou dificuldades. Esta não é uma revisão sistemática, por isso pode não incluir todos os estudos da área.
 
 \section{Sistemas legados e modernização}
 
-Um sistema legado é um sistema antigo que ainda está em uso. Ele pode estar escrito em uma linguagem pouco usada hoje, ter uma estrutura difícil de mudar ou depender de bibliotecas sem suporte. Mesmo assim, ele pode ser importante, porque muitas vezes guarda regras de negócio que a organização usa todos os dias.
+A introdução explicou o que é um sistema legado e por que modernizá-lo exige cuidado. Esta seção mostra como a modernização aparece nos estudos, começando pelo tamanho do trabalho. \citeonline{alves2026legacy} separam dois níveis. No nível estreito, o desenvolvedor migra uma parte do sistema, como uma API, para uma versão nova. Uma API é o conjunto de funções que um programa oferece para ser usado por outros. No nível amplo, ele atualiza o sistema inteiro, ou um componente grande, para outra linguagem ou plataforma.
 
-Um exemplo é o sistema estudado por \citeonline{alves2026legacy}. Era um sistema de gestão em Visual Basic 6, em produção havia mais de vinte anos. Outro exemplo são os programas em COBOL, que a IBM migra para Java \cite{chakaravarthy2026cobol}.
+Os dois níveis aparecem nos estudos usados aqui. A conversão de linguagem é o caso do Visual Basic 6 para C\# e do COBOL para Java. A atualização de versão mantém a mesma linguagem, como na passagem do Java 8 para o 17, estudada por \citeonline{liu2026migrationbench} e \citeonline{may2025freshbrew}. Mesmo assim, o trabalho não é simples, porque cada versão nova da linguagem pode deixar de aceitar partes do código antigo.
 
-A modernização é o trabalho de levar esse sistema para uma tecnologia mais nova, sem perder o que ele já faz. Ela pode ser de dois tipos:
+Os sistemas estudados ajudam a ter uma ideia do tamanho do problema. \citeonline{alves2026legacy} trabalharam com um ERP, que é um sistema de gestão usado por empresas, neste caso para administrar shopping centers. Esse sistema é grande e está em uso há mais de duas décadas, por isso os autores não migraram tudo: escolheram dois módulos, que são partes separadas do sistema. Um cuida das medições, com cerca de 299 mil linhas de código, e o outro das compras, com cerca de 224 mil. As linhas de código são uma forma comum de medir o tamanho de um programa. Esses módulos não eram de teste: eles são usados o tempo todo pelos clientes da empresa.
 
-\begin{itemize}
-    \item \textbf{conversão de linguagem}, por exemplo de Visual Basic 6 para C\#;
-    \item \textbf{atualização de versão}, por exemplo de Java 8 para Java 17 \cite{liu2026migrationbench, may2025freshbrew}.
-\end{itemize}
+A migração foi para C\# (.NET 10), feita por um agente de IA, mantendo o mesmo banco de dados. O agente trabalhou em uma única passada, sem ajuda humana entre as tentativas, e migrou 12 funcionalidades, seis de cada módulo: seis de complexidade baixa, quatro média e duas alta. Essa divisão permite ver se o resultado muda conforme a dificuldade, e isso volta na Seção~\ref{sec:desafios-literatura}.
 
-Uma dificuldade relatada é a falta de documentação. Em alguns casos, o código é a única fonte do que o sistema faz. \citeonline{diggs2024leveraging} testaram modelos de linguagem para documentar código legado em MUMPS e em assembly. Entender o código antigo é uma etapa importante da modernização.
+O estudo da IBM segue outro caminho. Em vez de pedir a um agente que conduza a migração, \citeonline{chakaravarthy2026cobol} dividem o trabalho em duas partes. Primeiro, uma análise do código COBOL descobre como o programa em Java deve ser organizado: as classes, as hierarquias entre elas e as assinaturas dos métodos, isto é, os nomes e os dados de entrada e saída das funções. Depois, o modelo de linguagem usa esse desenho como guia para traduzir a lógica do programa. Esse processo é parte central do produto watsonx Code Assistant for Z.
+
+Os autores o avaliaram em 20 programas de um conjunto chamado GenAPP e em 10 aplicações de clientes, e o compararam com três modelos de linguagem usados sozinhos. Segundo eles, o resultado teve menos variação, com nomes e organização mais uniformes.
+
+Os dois estudos mostram, portanto, duas formas de usar a IA na modernização: um agente que conduz a migração e um processo que combina o modelo com a análise do código. As duas formas voltam na próxima seção.

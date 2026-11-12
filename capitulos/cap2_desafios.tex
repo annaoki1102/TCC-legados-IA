@@ -1,6 +1,7 @@
 \section{Desafios encontrados na literatura}
+\label{sec:desafios-literatura}
 
-Além da verificação, há outros pontos a observar. A literatura relata resultados bons no uso de agentes de IA na modernização, mas também desafios. Eles estão resumidos no Quadro~\ref{tab:desafios} e explicados a seguir.
+A verificação mostra se o código novo está certo, mas os estudos relatam outros desafios além dela. Eles estão resumidos no Quadro~\ref{tab:desafios} e são explicados em seguida.
 
 \begin{table}[htb]
 \centering
@@ -14,7 +15,7 @@ Além da verificação, há outros pontos a observar. A literatura relata result
 Tamanho do sistema & Passou em 91,3\% dos testes com menos de 10 mil linhas e em 15,3\% com mais de 50 mil & \citeonline{li2026repomod} \\
 Complexidade das funcionalidades & Equivalência de 92\% (baixa), 81\% (média) e 47\% (alta) & \citeonline{alves2026legacy} \\
 Regras escondidas & O agente perdeu regras implícitas e regras espalhadas em vários arquivos & \citeonline{alves2026legacy} \\
-Atalhos do agente & Excluiu testes que falhavam e executou o programa original em vez de traduzi-lo & \citeonline{may2025freshbrew}; \citeonline{li2026repomod} \\
+Atalhos do agente & Excluiu testes que falhavam e, em 5 de 10 projetos, executou o programa original em vez de traduzi-lo & \citeonline{may2025freshbrew}; \citeonline{li2026repomod} \\
 Linguagens antigas & Bons resultados em MUMPS, notas ruins em assembly, e alucinações em ambos & \citeonline{diggs2024leveraging} \\
 Custo & Em média, 3,81 milhões de tokens e US\$ 4,19 por migração & \citeonline{alves2026legacy} \\
 \bottomrule
@@ -25,28 +26,43 @@ Custo & Em média, 3,81 milhões de tokens e US\$ 4,19 por migração & \citeonl
 
 \subsection*{Tamanho e complexidade}
 
-Nos estudos lidos, os resultados foram piores em sistemas maiores e mais complexos. Além dos números do Quadro~\ref{tab:desafios}, \citeonline{liu2026migrationbench} relataram 71,67\% de sucesso na migração mínima de Java 8 para Java 17 e 53,33\% na migração máxima. No estudo de \citeonline{may2025freshbrew}, o melhor modelo migrou 52,3\% dos projetos.
+Os resultados costumam piorar quando o sistema é maior ou mais complexo. Quatro estudos mostram isso:
+
+\begin{itemize}
+    \item \citeonline{li2026repomod}: os agentes passaram em 91,3\% dos testes em projetos com menos de 10 mil linhas de código e em 15,3\% nos projetos com mais de 50 mil.
+    \item \citeonline{alves2026legacy}: a equivalência com o sistema original foi de 92\% nas funcionalidades de complexidade baixa, 81\% nas médias e 47\% nas altas.
+    \item \citeonline{liu2026migrationbench}: com o modelo Claude 4.5 Sonnet, houve 71,67\% de sucesso na migração mínima do Java 8 para o 17 e 53,33\% na máxima, em um subconjunto de 300 repositórios.
+    \item \citeonline{may2025freshbrew}: o melhor modelo migrou 52,3\% dos projetos para o Java 17.
+\end{itemize}
+
+Os estudos usam medidas diferentes, por isso os números não devem ser comparados entre si. O que eles mostram em comum é que, nos casos relatados, o resultado cai em tarefas maiores ou mais difíceis e que nenhum agente acertou tudo.
 
 \subsection*{Regras que o agente não vê}
 
-No estudo de \citeonline{alves2026legacy}, o agente deixou de migrar 100 de 331 itens analisados. A maior causa, com 42 casos, foram módulos vizinhos que ele não detectou. As regras escritas de forma explícita foram migradas melhor do que as implícitas, como as que dependem de parâmetros opcionais ou de configurações globais.
+Outro desafio é o agente não perceber regras do sistema antigo. \citeonline{alves2026legacy} mapearam 331 instruções nas 12 funcionalidades, sendo 160 regras de negócio e 171 operações de banco de dados. O agente deixou de migrar 100 delas. A maior causa, com 42 casos, foram módulos vizinhos que ele não encontrou. Depois vieram 22 operações de banco de dados e 20 regras que ficaram de fora.
+
+Os autores também observaram que o agente tratou melhor as regras escritas de forma explícita do que as implícitas, como as que ficam escondidas em parâmetros opcionais ou em configurações dinâmicas. Isso sugere que o agente migra bem o que consegue ver, o que é um risco em sistemas com regras espalhadas.
 
 \subsection*{Atalhos e falsa impressão de sucesso}
 
-O agente pode parecer ter acertado sem ter acertado. No estudo de \citeonline{may2025freshbrew}, um agente excluiu testes que falhavam do processo de construção do projeto. No estudo de \citeonline{li2026repomod}, em uma execução sem regras contra atalhos, um agente chegou a 99,5\% de testes aprovados, mas em cinco projetos ele só chamava o programa original. Por isso, o desenvolvedor deve proteger os testes e conferir o que o agente de fato fez.
+O agente pode parecer ter acertado sem ter acertado. \citeonline{may2025freshbrew} alertam que um agente poderia conseguir uma migração só na aparência, apagando os testes que falham no Java novo. Eles mostram casos em que um modelo tirou dois testes que falhavam do arquivo de construção do projeto e outro fez um teste ser pulado em Java moderno.
+
+\citeonline{li2026repomod} viram algo parecido em um experimento inicial, em uma versão do teste sem regras contra atalhos. Um agente chegou a 99,5\% de testes aprovados, mas em 5 de 10 projetos usou códigos que apenas executavam o programa original. Depois de acrescentar essas regras, os autores relatam que esse comportamento deixou de aparecer. Por isso, o desenvolvedor deve proteger os testes e conferir o que o agente de fato fez.
 
 \subsection*{Linguagens antigas e pouca documentação}
 
-\citeonline{diggs2024leveraging} observaram que os modelos tendem a inventar informações em código legado. Os comentários gerados para MUMPS foram bem avaliados, mas os de assembly tiveram notas baixas.
+Em código legado, os modelos também podem errar de outro jeito. \citeonline{diggs2024leveraging} observaram que eles tendem a inventar informações, o que se chama de alucinação. Os comentários gerados para MUMPS foram avaliados por especialistas como bem melhores, em média, do que os de assembly, que tiveram qualidade baixa no geral. Os autores também lembram que outro estudo apontou a falta de documentação como obstáculo para saber se um código traduzido está correto.
 
 \subsection*{Custo}
 
-O custo depende do tamanho da tarefa. No estudo de \citeonline{alves2026legacy}, as funcionalidades de alta complexidade usaram cerca de 9 milhões de tokens, em média, e a maior parte do gasto vem do que o agente lê, e não do que escreve.
+O custo depende do tamanho da tarefa. Em \citeonline{alves2026legacy}, cada migração usou, em média, 3,81 milhões de \textit{tokens}, que são as unidades em que os modelos contam o texto que leem e escrevem, e custou US\$ 4,19. As funcionalidades de alta complexidade usaram, em média, 9,09 milhões de \textit{tokens}. Quase todos os \textit{tokens}, 99,6\%, são do que o agente recebe, porque ele relê o código antigo a cada ciclo de trabalho. Por isso, os autores concluem que o custo de uma migração depende, em boa parte, do volume do que o agente recebe.
 
-\subsection*{Supervisão do desenvolvedor}
+\subsection*{Resumo e o que ainda falta}
 
-Nos estudos lidos, o resultado do agente foi verificado de alguma forma. \citeonline{alves2026legacy} usaram um segundo revisor para conferir as regras migradas. \citeonline{diggs2024leveraging} indicam avaliação humana, porque as métricas automáticas não bastaram. E \citeonline{chakaravarthy2026cobol} relatam que juntar o modelo com análise do código melhorou os resultados e reduziu a variação entre eles.
+Os estudos mostram, portanto, que o resultado do agente piora quando o sistema é maior ou mais complexo, que ele pode perder regras que não consegue ver, que pode tomar atalhos para parecer ter acertado, que erra mais em linguagens antigas e pouco documentadas e que o custo cresce com o volume de código que ele lê. Esses são os desafios do Quadro~\ref{tab:desafios}.
 
-\subsection*{O que ainda falta}
+Os estudos que lemos têm algo em comum. Parte deles usa \textit{benchmarks}, que são conjuntos de projetos públicos preparados para testar agentes, como o FreshBrew, o MigrationBench e o RepoMod-Bench. Outra parte usa sistemas de empresas, como o ERP de shoppings do estudo de \citeonline{alves2026legacy}, que é grande, tem mais de vinte anos e foi estudado em um ambiente preparado pelos autores. Nos dois casos, o foco é medir o desempenho do agente: quantos testes passou, quantas regras migrou e quanto custou.
 
-Nos estudos que lemos, a avaliação usa conjuntos de testes públicos ou sistemas de empresas, e encontramos pouco sobre o uso do agente no dia a dia do desenvolvedor, em um sistema real e menor. É isso que o estudo de caso deste trabalho propõe.
+Isso deixa uma pergunta menos explorada. O que acontece quando uma pessoa que desenvolve, no seu dia a dia, pede a um agente que atualize parte de um sistema real e de tamanho menor, e depois precisa conferir o que ele fez? Nesse caso, não existe um conjunto de projetos e testes já preparado. O desenvolvedor precisa descobrir as regras do sistema, definir os resultados esperados e decidir se o código novo pode ser aceito. Nos estudos que lemos, encontramos pouco sobre essa situação.
+
+É esse espaço que o estudo de caso deste trabalho ocupa. O Capítulo~4 explica como o estudo foi feito: o sistema, as regras escolhidas e a forma de conferir o resultado. O Capítulo~5 mostra o que foi encontrado e relaciona esses achados com os desafios do Quadro~\ref{tab:desafios}.

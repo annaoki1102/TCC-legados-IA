@@ -1,38 +1,145 @@
-Este capítulo descreve como o estudo de caso foi feito.
+Os estudos que vimos no capítulo anterior testam agentes de IA em sistemas grandes ou em projetos de código aberto. Falta ver o que acontece com um sistema pequeno, feito em ferramenta de baixo código (que monta sistemas com poucas linhas de código), dentro de uma instituição pública. É isso que este capítulo mostra.
 
-\section{Tipo de pesquisa}
+Aqui está o relato prático do trabalho: um sistema real foi copiado, teve os dados trocados por dados inventados, e quatro de suas regras foram convertidas para Python por um agente de IA. Depois, o resultado do Python foi comparado com o que o sistema original mostra. O capítulo segue essa ordem, e cada parte traz as imagens do que foi feito.
 
-Este trabalho tem abordagem qualitativa e caráter exploratório. Ele tem duas partes: uma revisão da literatura, apresentada no Capítulo 3, e um estudo de caso, descrito neste capítulo. A pesquisa é qualitativa porque descreve e analisa os desafios encontrados, sem medir com estatística. É exploratória porque busca conhecer melhor um tema ainda pouco observado na prática do desenvolvedor.
+\section{Estudo de caso}
+\label{sec:estudo-caso}
 
-\section{O estudo de caso}
+Esta pesquisa é aplicada, porque parte de um problema real do desenvolvedor: converter um sistema antigo para uma tecnologia nova. É também exploratória, pois o tema tem poucos estudos e o objetivo é entender como o problema aparece, não provar uma teoria.
 
-Para observar na prática os desafios relatados na literatura, foi feito um estudo de caso com um sistema real de uma instituição pública. O sistema estudado foi o SIS Eventos, usado para registrar e aprovar a participação de pessoas em eventos. Ele foi feito no Microsoft Power Apps, com dados em listas do SharePoint. Neste estudo, partes dele foram convertidas para Python, com testes automáticos.
+O método é o estudo de caso: olhar um sistema de perto, com detalhe, em vez de muitos de longe. A vantagem é poder descrever cada passo e cada dificuldade. O limite é que o resultado vale para este caso, e não para todos os sistemas.
 
-O número total de fórmulas do sistema não foi contado. Como referência do tamanho, a busca no editor encontrou 39 ocorrências da lista de diárias nacionais e 88 da quantidade de pessoas, em várias telas.
+O trabalho seguiu cinco etapas, mostradas na Figura~\ref{fig:etapas}: (1) escolher o sistema e as regras; (2) montar uma cópia do sistema com dados inventados; (3) anotar os resultados que o sistema original mostra, que são os resultados esperados; (4) pedir ao agente de IA que converta as regras para Python; (5) comparar o resultado do Python com o esperado. A análise é qualitativa, pois descreve as dificuldades, e usa números simples, como a quantidade de testes que passaram, para apoiar essa descrição.
 
-Foram convertidas quatro regras do sistema. As três primeiras foram planejadas desde o início, com graus de complexidade diferentes: o tratamento dos registros excluídos (regra 01, simples), o valor de cada linha de custo (regra 02, média) e o total previsto de custos (regra 03, complexa). A quarta, o total realizado (regra 04), foi feita a mais. Essas regras estão descritas na seção seguinte.
+\begin{figure}[htbp]
+\centering
+\caption{Etapas do trabalho}
+\label{fig:etapas}
+\begin{tikzpicture}[
+    etapa/.style={draw, rounded corners=2pt, align=center, font=\footnotesize,
+                  text width=2.3cm, minimum height=2.6cm, inner sep=3pt},
+    seta/.style={-latex, thick}
+]
+\node[etapa] (e1) at (0,0)    {(1) Escolher o sistema e as regras};
+\node[etapa] (e2) at (3.1,0)  {(2) Montar uma cópia do sistema com dados inventados};
+\node[etapa] (e3) at (6.2,0)  {(3) Anotar os resultados que o sistema original mostra, que são os resultados esperados};
+\node[etapa] (e4) at (9.3,0)  {(4) Pedir ao agente de IA que converta as regras para Python};
+\node[etapa] (e5) at (12.4,0) {(5) Comparar o resultado do Python com o esperado};
+\draw[seta] (e1) -- (e2);
+\draw[seta] (e2) -- (e3);
+\draw[seta] (e3) -- (e4);
+\draw[seta] (e4) -- (e5);
+\end{tikzpicture}
+\\[2pt]
+\footnotesize Fonte: elaborado pela autora.
+\end{figure}
 
-O responsável pelo sistema é o \textit{stakeholder} do trabalho.
+\section{Por que este sistema e por que só parte dele}
+\label{sec:escolha-sistema}
+
+O sistema escolhido é o SIS Eventos, que uma instituição pública usa para pedir e controlar a participação em eventos. Escolhi ele por três motivos. Primeiro, é um sistema real, em uso, e não um exemplo feito para teste. Segundo, é feito em Power Apps, e nele as regras de cálculo ficam escondidas dentro das telas, o que torna a conversão mais difícil de enxergar e, por isso, mais interessante de estudar. Terceiro, eu conhecia o sistema e tive acesso a ele durante o estágio, o que permitiu entender cada regra.
+
+Não converti o sistema todo porque ele é grande demais para um trabalho de graduação. O número total de fórmulas não foi contado, mas, como referência do tamanho, a busca no editor encontrou 39 ocorrências da lista de diárias nacionais e 88 da quantidade de pessoas, em várias telas. Em vez de converter tudo, escolhi regras específicas. Os critérios foram: a regra precisa ter um resultado que dê para conferir; as regras juntas precisam ter níveis diferentes de dificuldade; e todas precisam usar dados do próprio sistema.
+
+Foram planejadas três regras, de complexidade simples, média e complexa. Uma quarta regra foi acrescentada durante o trabalho. O Quadro~\ref{quad:regras} mostra as quatro.
+
+\begin{table}[htbp]
+\centering
+\caption{Regras convertidas no estudo de caso}
+\label{quad:regras}
+\small
+\begin{tabular}{p{1.2cm}p{7.4cm}p{3.6cm}}
+\toprule
+\textbf{Regra} & \textbf{O que calcula} & \textbf{Dificuldade} \\
+\midrule
+01 & Contagem dos eventos por ano e por status, sem os registros excluídos & Simples \\
+02 & Valor de cada linha de custo & Média \\
+03 & Total previsto de custos dos eventos aprovados de um ano & Complexa \\
+04 & Total realizado dos eventos aprovados de um ano & Acrescentada durante o trabalho \\
+\bottomrule
+\end{tabular}
+\\[2pt]
+\footnotesize Fonte: elaborado pela autora.
+\end{table}
+
+Por isso, este trabalho mostra a conversão dessas quatro regras. Ele não mostra a conversão do sistema inteiro.
 
 \input{capitulos/descricao_sistema}
 
-\section{Dados sintéticos}
+\section{A cópia do sistema e os dados inventados}
+\label{sec:copia-dados}
 
-O estudo de caso usou dados sintéticos, ou seja, dados inventados para o estudo. Nenhum dado real foi usado. Os dados ficaram em três tabelas, com os mesmos nomes de campos das fórmulas: eventos, linhas de custo e diárias nacionais.
+Os dados reais não podem sair da instituição. Para resolver isso, exportei uma cópia do aplicativo original e a liguei a listas de teste, criadas por mim em um SharePoint pessoal, com os mesmos nomes de colunas das listas reais. Assim, o aplicativo é o mesmo, com as mesmas telas e fórmulas, e só os dados mudaram.
 
-Os casos foram escolhidos para passar por cada regra da descrição do sistema atual. Eles têm eventos de 2025 e 2026, com todos os status, eventos, linhas de custo e diárias marcados como excluídos, cada tipo de custo, inscrição em dólar e em real, e um evento sem custos. Todos os valores são inteiros.
+Os dados inventados são 10 eventos, 23 itens de custo e 3 valores de diária, com os mesmos nomes de campos das fórmulas. Os casos foram escolhidos para passar por cada regra. Eles têm eventos de 2025 e 2026, com todos os status, eventos, linhas de custo e diárias marcados como excluídos, cada tipo de custo, inscrição em dólar e em real, e um evento sem custos. Todos os valores são inteiros. O Quadro~\ref{quad:dados} mostra o que cada grupo de dados cobre.
 
-\section{Como os resultados esperados foram obtidos}
+\begin{figure}[htbp]
+\centering
+\caption{Listas de teste no SharePoint}
+\label{fig:listas-teste}
+\fbox{\parbox[c][4cm][c]{0.85\textwidth}{\centering\textbf{[FIGURA PENDENTE: as listas de teste no SharePoint. Print da Anna.]}}}
+\end{figure}
 
-No sistema atual, os dados ficam em listas do SharePoint, e as contas ficam dentro de controles das telas do Power Apps, e não em um lugar só.
+\begin{table}[htbp]
+\centering
+\caption{O que cada grupo de dados inventados cobre}
+\label{quad:dados}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{4.2cm}>{\raggedright\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{2.4cm}>{\raggedright\arraybackslash}p{2.4cm}}
+\toprule
+\textbf{Situação do evento} & \textbf{Quantidade de eventos} & \textbf{Anos} & \textbf{Entra nas regras} \\
+\midrule
+Aprovado & 4 & 2026 (3), 2025 (1) & 01, 03 e 04 \\
+Aprovado, marcado como excluído & 1 & 2026 & nenhuma \\
+Em Aberto & 1 & 2026 & 01 \\
+Em Análise & 1 & 2026 & 01 \\
+Não Aprovado & 1 & 2026 & 01 \\
+Aprovado para ajustes & 1 & 2026 & 01 \\
+Cancelado & 1 & 2025 & 01 \\
+\midrule
+Total & 10 & & \\
+\bottomrule
+\end{tabular}
+\\[2pt]
+\footnotesize Fonte: elaborado pela autora, com base no arquivo \texttt{estudo-caso/dados/eventos.csv}.
+\end{table}
 
-Para saber o resultado de cada caso no sistema atual, as fórmulas das quatro regras foram copiadas do editor do Power Apps. Depois, elas foram rodadas em um app novo e vazio do Power Apps, criado só para o teste. Nesse app, os dados inventados foram carregados em coleções com os mesmos nomes das listas, e as fórmulas foram coladas nos controles sem mudança. O app real e as listas do SharePoint não foram usados. A autora anotou o que o app mostrou em uma tabela de resultados esperados.
+O limite é que dados inventados não têm a irregularidade dos dados reais, como campos em branco ou erros de digitação.
 
-No código em Python, os mesmos dados foram processados pelo código feito pelo agente. O resultado de cada caso foi comparado com a tabela de resultados esperados. Quando os resultados foram iguais, a regra foi considerada equivalente nesse caso.
+\section{Os resultados esperados}
+\label{sec:esperados}
 
-\section{Uso do agente de IA}
+O resultado esperado é o valor que o sistema atual dá para cada caso. Foram reunidos 41 valores, guardados em uma tabela CSV (o Quadro~\ref{quad:esperados} mostra um trecho). A coluna do texto em reais foi montada a partir do formato das fórmulas, e não copiada da tela.
 
-A conversão foi feita com o agente Claude Code, com o modelo Claude Opus 5.5, dentro do ambiente de desenvolvimento. O processo teve estes passos:
+\textbf{[PENDENTE: reescrever esta seção depois que a cópia do app rodar com as listas de teste e os valores forem conferidos nela. Hoje os valores vieram do app vazio de teste.]}
+
+\begin{table}[htbp]
+\centering
+\caption{Trecho da tabela de resultados esperados}
+\label{quad:esperados}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{1cm}>{\raggedright\arraybackslash}p{3.8cm}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{3.1cm}}
+\toprule
+\textbf{Regra} & \textbf{Caso} & \textbf{Resultado no sistema atual} & \textbf{Texto em reais (montado)} \\
+\midrule
+01 & ano 2026 - Total & \texttt{7} & 7 \\
+01 & ano 2026 - Aprovado & \texttt{3} & 3 \\
+01 & ano 2025 - Cancelado & \texttt{1} & 1 \\
+02 & custo 1 & \texttt{200.00} & R\$ 200,00 \\
+02 & custo 4 & \texttt{800.00} & R\$ 800,00 \\
+02 & custo 9 & \texttt{800.00} & R\$ 800,00 \\
+03 & ano 2026 & \texttt{19450.00} & R\$ 19.450,00 \\
+04 & ano 2026 & \texttt{20350.00} & R\$ 20.350,00 \\
+\bottomrule
+\end{tabular}
+\\[2pt]
+\footnotesize Fonte: elaborado pela autora, com base no arquivo \texttt{estudo-caso/resultados\_esperados.csv}.
+\end{table}
+
+\section{O uso do agente de IA}
+\label{sec:uso-agente}
+
+A conversão foi feita com o Claude Code, um agente de IA que lê os arquivos do projeto, escreve código e roda testes. O modelo usado foi o Claude Opus 5.5. O processo teve estes passos:
 
 \begin{enumerate}
     \item as fórmulas, os dados inventados e a tabela de resultados esperados ficaram em arquivos no projeto;
@@ -42,18 +149,37 @@ A conversão foi feita com o agente Claude Code, com o modelo Claude Opus 5.5, d
     \item no fim, o agente escreveu um registro com o que entendeu de cada regra, o que errou, o que ficou ambíguo, quantas tentativas fez e se a regra passou.
 \end{enumerate}
 
-O agente também recebeu duas orientações: ser fiel ao sistema antigo, inclusive nos comportamentos estranhos, sem ``consertar'' as regras; e usar o tipo \texttt{Decimal} do Python para os valores em dinheiro.
+O agente também recebeu duas orientações: ser fiel ao sistema antigo, inclusive nos comportamentos estranhos, sem ``consertar'' as regras; e usar o tipo \texttt{Decimal} do Python para os valores em dinheiro. O \texttt{Decimal} evita pequenos erros de arredondamento dos números comuns. Os testes usam o pytest, ferramenta que roda testes automáticos e diz quais passaram (Figura~\ref{fig:pytest}).
 
-\section{Como foi a avaliação}
+\begin{figure}[htbp]
+\centering
+\caption{Saída do pytest}
+\label{fig:pytest}
+\fbox{\parbox[c][4cm][c]{0.85\textwidth}{\centering\textbf{[FIGURA PENDENTE: saída do pytest com 42 testes passando. Print do terminal da Anna.]}}}
+\end{figure}
 
-Cada regra foi considerada correta se o código rodasse e passasse nos testes \cite{pan2024lost}, ou seja, se desse os mesmos resultados do app de teste nos casos testados. Além disso:
+\begin{table}[htbp]
+\centering
+\caption{Tentativas, resultado e dificuldade principal por regra}
+\label{quad:agente}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{1cm}>{\raggedright\arraybackslash}p{1.9cm}>{\raggedright\arraybackslash}p{1.6cm}>{\raggedright\arraybackslash}p{6.6cm}}
+\toprule
+\textbf{Regra} & \textbf{Tentativas} & \textbf{Passou} & \textbf{Dificuldade principal} \\
+\midrule
+01 & 1 & Sim & Um ano que só tem eventos excluídos aparece na lista de anos, mas sai pelo filtro. Esse caso não foi testado. \\
+02 & 1 & Sim & Não se sabe de onde vêm os campos \texttt{ValorConvertido} e \texttt{InscricaoConvertida}. \\
+03 & 1 & Sim & Na fórmula, foi preciso deduzir a qual lista pertence cada \texttt{ID}. \\
+04 & 1 & Sim & O ``-'' da função \texttt{Coalesce} nunca aparece. \\
+\bottomrule
+\end{tabular}
+\\[2pt]
+\footnotesize Fonte: elaborado pela autora, com base no arquivo \texttt{estudo-caso/registro\_conversao.md}.
+\end{table}
 
-\begin{itemize}
-    \item os valores esperados vieram só da tabela de resultados anotada pela autora;
-    \item o agente não podia mudar essa tabela nem os dados;
-    \item os testes cobriram os casos de cada regra que estão na tabela.
-\end{itemize}
+\section{A avaliação}
+\label{sec:avaliacao}
 
-Os comportamentos observados foram relacionados aos desafios do Quadro~\ref{tab:desafios} quando a ligação era clara.
+A avaliação compara dois resultados: o que o Python calculou e o que o Power Apps mostrou. Para cada um dos 41 valores, o critério é simples: o valor está igual ao esperado ou não está. Se não está, descrevo o motivo. Além disso, registro quantos testes automáticos passaram. São 41 valores e 42 testes porque a regra 01, além dos 14 testes de contagem, tem um teste a mais, que confere se os anos aparecem do maior para o menor.
 
-Este estudo tem limites. Ele observou um sistema, um agente e uma troca de tecnologia, então os resultados mostram o que aconteceu nesse caso e não valem para todos os sistemas. Estudos parecidos, como o de \citeonline{alves2026legacy}, também tratam seus resultados dessa forma. O agente pode dar resultados diferentes a cada execução, e a mesma pessoa conduziu e avaliou o estudo. Além disso, o sistema atual foi feito em Power Apps, e não em código escrito em arquivos, como os sistemas dos estudos citados. Os outros limites estão no Capítulo~\ref{cap:resultados}.
+Os limites são claros: o resultado vale para quatro regras, com dados inventados, em um único sistema. Ele mostra como a conversão se comportou neste caso, e não que qualquer sistema pode ser convertido assim.
