@@ -36,6 +36,7 @@
 
 \renewcommand{\listfigurename}{}
 \addto\captionsbrazil{\renewcommand{\tablename}{Quadro}}
+\renewcommand{\lstlistingname}{Código}
 \begin{document} 
 \pagestyle{empty}
 \maketitle
@@ -234,5 +235,9 @@ This work addresses the update of legacy systems to new technologies using AI de
 % Ou manualmente seguindo o arquivo que deixei como modelo
 % --------------------------------------
 \bibliography{TCC}
+
+\begin{apendicesenv}
+\input{capitulos/apendice}
+\end{apendicesenv}
 
 \end{document}

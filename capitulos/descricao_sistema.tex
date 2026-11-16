@@ -1,31 +1,37 @@
-\section{O sistema que foi convertido}
+\section{O sistema antigo}
 \label{sec:sistema}
 
-O SIS Eventos serve para a instituição registrar os eventos em que quer participar, como congressos e feiras, e prever quanto vai gastar com cada um. O sistema tem duas partes: o aplicativo, feito em Power Apps (ferramenta da Microsoft para criar aplicativos por telas), e as listas do SharePoint, que funcionam como tabelas de um banco de dados e guardam as informações.
+Esta seção apresenta o SIS Eventos pela sua estrutura. Os dados que identificam a instituição foram cobertos nas imagens, porque o que interessa aqui é como o sistema é organizado e onde ficam as regras.
 
-O uso começa na tela de exercícios (Figura~\ref{fig:tela-exercicios}), onde o usuário escolhe o ano. Em seguida, a tela de solicitações (Figura~\ref{fig:tela-solicitacoes}) mostra os eventos daquele ano, com a situação de cada um, como aprovado, em análise ou cancelado, e o custo previsto. Ao abrir um evento, aparecem os itens de custo: diárias, inscrição, passagem e seguro (Figura~\ref{fig:tela-custos}).
-
-Os dados ficam em listas ligadas entre si. Cada evento tem vários itens de custo, e cada item de custo usa um valor de diária de outra lista (Figura~\ref{fig:listas}). As regras estudadas ficam nas fórmulas dos componentes das telas, escritas em Power Fx, a linguagem de fórmulas do Power Apps. Por isso, para converter uma regra, o agente precisa achar a fórmula certa dentro da tela e entender de quais listas ela depende.
+O uso do sistema começa na tela de exercícios (Figura~\ref{fig:tela-exercicios}), onde a pessoa escolhe o ano e vê quantos eventos há em cada situação: Em Aberto, Em Análise, Aprovado, Não Aprovado, Cancelado e Aprovado para ajustes. Ao escolher um ano, o sistema abre a tela de solicitações (Figura~\ref{fig:tela-solicitacoes}), que lista os eventos pedidos, com a data, o tipo de evento, o local e o custo previsto de cada um. Esse custo vem da soma dos itens de custo de cada evento, como diárias, inscrição, passagem e seguro de viagem.
 
 \begin{figure}[htbp]
 \centering
-\caption{Tela de exercícios}
+\caption{Tela de exercícios do sistema antigo}
 \label{fig:tela-exercicios}
-\fbox{\parbox[c][4cm][c]{0.85\textwidth}{\centering\textbf{[FIGURA PENDENTE: tela de exercícios do app com dados inventados. Print da Anna.]}}}
+\includegraphics[width=0.9\textwidth]{figuras/tela_exercicios.png}
+\\[2pt]
+\footnotesize Fonte: elaborado pela autora.
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\caption{Tela de solicitações}
+\caption{Tela de solicitações do sistema antigo}
 \label{fig:tela-solicitacoes}
-\fbox{\parbox[c][4cm][c]{0.85\textwidth}{\centering\textbf{[FIGURA PENDENTE: tela de solicitações. Print da Anna.]}}}
+\includegraphics[width=\textwidth]{figuras/tela_solicitacoes_corte.png}
+\\[2pt]
+\footnotesize Fonte: elaborado pela autora. Os valores e os dados que identificam a instituição foram cobertos.
 \end{figure}
+
+No total, o aplicativo tem nove telas, mostradas na Figura~\ref{fig:lista-telas}. Além das duas já citadas, há telas para criar uma solicitação, ver pendências, prestar contas, configurar o sistema e fazer três cadastros: áreas requisitantes, permissões e pontos focais. Os dados ficam em dez listas do SharePoint, que funcionam como tabelas de um banco de dados. Três delas importam para as regras estudadas: a de eventos, a de itens de custo e a de diárias nacionais, que se ligam como mostra a Figura~\ref{fig:listas}.
 
 \begin{figure}[htbp]
 \centering
-\caption{Tela com os itens de custo de um evento}
-\label{fig:tela-custos}
-\fbox{\parbox[c][4cm][c]{0.85\textwidth}{\centering\textbf{[FIGURA PENDENTE: tela com os itens de custo de um evento. Print da Anna.]}}}
+\caption{Telas do aplicativo}
+\label{fig:lista-telas}
+\includegraphics[width=0.5\textwidth]{figuras/lista_telas.png}
+\\[2pt]
+\footnotesize Fonte: elaborado pela autora.
 \end{figure}
 
 \begin{figure}[htbp]
@@ -48,30 +54,81 @@ Os dados ficam em listas ligadas entre si. Cada evento tem vários itens de cust
 \footnotesize Fonte: elaborado pela autora.
 \end{figure}
 
+As regras estudadas não ficam em uma tela ou arquivo próprio. Elas estão em fórmulas, escritas em Power Fx, a linguagem de fórmulas do Power Apps, dentro dos componentes das telas. O Código~\ref{cod:formula-regra03} mostra um exemplo: a fórmula do total previsto de custos dos eventos aprovados de um ano, que é a regra 03. Nela, cada linha de custo soma sete partes, e só lendo a fórmula é possível saber como a conta é feita. O print do editor do Power Apps com a fórmula do custo previsto de cada evento, que aparece na coluna ``R\$ Previsto'', está no Apêndice~\ref{ap:formula-regra03}. A subseção a seguir descreve as quatro regras como foram lidas nas fórmulas.
+
+% TODO: confirmar no Power Apps a origem desta fórmula (ButtonCanvas6_3) e como ela se liga ao print do Apêndice.
+\noindent\begin{minipage}{\textwidth}
+\begin{lstlisting}[caption={Fórmula do total previsto de custos dos eventos aprovados de um ano (regra 03)}, label={cod:formula-regra03}, language={}, basicstyle={\fontsize{9}{11}\selectfont\ttfamily}, breaklines=true, upquote=true]
+Text(
+  Sum(
+    ForAll(
+      Filter(
+        TB_EVENTOS;
+        'Status de participação'.Value = "Aprovado" &&
+        Year(DT_Inicio) = VarAnoExercicioSelecionado &&
+        Excluido <> "*"
+      );
+      With(
+        {
+          custos: Filter(
+            TB_PREVISAO_CUSTO_EVENTOS As PC;
+            PC.ID_EVENTO = ID && PC.Excluido <> "*"
+          )
+        };
+        Sum(
+          custos;
+          Round('QTD de Diárias' * 'Valor diária - Outro Cargo' * 'QTD de Pessoas'; 2) +
+          Round(
+            'QTD de Diárias' *
+            LookUp(
+              Filter(TB_DIARIAS_NACIONAIS; Excluido <> "*");
+              ID = ID_Diaria;
+              Valor
+            ) * 'QTD de Pessoas'; 2
+          ) +
+          Round(
+            ('Cotação Dolar/Real' * 'Valor em U$ diária internacional') *
+            ('QTD de Diárias' * 'QTD de Pessoas'); 2
+          ) +
+          If(
+            'Moeda  - Inscrição' = "US$";
+            Round('Cotação Dolar/Real' * 'Valor Inscrição'; 2);
+            Round('Valor Inscrição'; 2)
+          ) +
+          Round('Valor Custo Complementar'; 2) +
+          Round('Valor Seguro Viagem' * 'QTD de Pessoas'; 2) +
+          Round('Passagem individual' * 'QTD de Pessoas'; 2)
+        )
+      )
+    );ThisRecord.Value);
+  "[$-pt-BR]R$ #.##0,00"
+)
+\end{lstlisting}
+\centering\footnotesize Fonte: elaborado pela autora, com base no arquivo \texttt{estudo-caso/formulas/03\_total\_previsto.txt}.
+\end{minipage}
+
 \subsection{Como as quatro regras funcionam}
 \label{sec:como-regras}
 
-Esta subseção descreve as regras como elas foram lidas nas fórmulas do sistema, no editor do Power Apps. Elas são a base para os testes do estudo de caso.
+Esta subseção explica as quatro regras como foram lidas nas fórmulas do sistema. Cada uma tem três partes: para que serve, como é calculada e um exemplo. Os exemplos usam números inventados só para ilustrar. Elas seguem a ordem do Quadro~\ref{quad:regras}, da mais simples à mais complexa.
 
-\textbf{Registros excluídos.} As listas têm um campo, isto é, uma coluna, chamado \texttt{Excluido}. Os eventos, os custos e as diárias marcados com um asterisco (*) nesse campo são ignorados nas regras 01, 03 e 04. A regra 02 não olha esse campo: ela calcula o valor da linha de custo mesmo quando a linha está excluída, e usa o valor da diária da lista mesmo quando a diária está excluída.
+\textbf{Regra 01: contagem de eventos.} \textit{Para que serve:} a regra 01 alimenta os cartões da tela de exercícios (Figura~\ref{fig:tela-exercicios}), que mostram quantos eventos há em cada ano e em cada situação. \textit{Como é calculada:} ela conta os eventos de cada ano, no total e por status, que é a situação do pedido: Em Aberto, Em Análise, Aprovado, Não Aprovado, Cancelado ou Aprovado para ajustes. Os eventos excluídos não entram na conta. Nas listas do sistema, um registro excluído é marcado com um asterisco (*) no campo \texttt{Excluido}, ou seja, na coluna com esse nome. \textit{Exemplo:} um ano tem 8 registros: 3 Aprovados, 2 Em Aberto, 2 Cancelados e 1 Aprovado marcado como excluído. A regra mostra Total 7, Aprovado 3, Em Aberto 2 e Cancelado 2.
 
-\textbf{Regra 01: eventos por ano.} A regra 01 conta os eventos de cada ano, no total e por status, sem os eventos excluídos. O status é a situação do pedido: Em Aberto, Em Análise, Aprovado, Não Aprovado, Cancelado ou Aprovado para ajustes.
-
-\textbf{Diárias nacionais.} A diária é o valor pago por dia de viagem. Em um evento nacional, a pessoa escolhe o cargo ou função. O sistema então mostra as diárias da lista de diárias nacionais que têm a mesma classificação desse cargo. Cada opção aparece com o nome da cidade ou capital e o valor da diária. A classe do cargo é preenchida automaticamente a partir da lista de cargos. Se o âmbito do evento não for nacional, essa lista não mostra opções.
-
-\textbf{Regra 02: valor de cada linha de custo.} Cada linha de custo é um gasto previsto do evento, como uma passagem ou uma inscrição. O valor da linha depende do tipo de custo. O sistema testa os casos na ordem abaixo e usa o primeiro que se aplica. O resultado aparece em reais.
+\textbf{Regra 02: valor de cada linha de custo.} \textit{Para que serve:} a previsão de custo de um evento é feita de várias linhas. Cada linha é um gasto, como a passagem, a inscrição ou o seguro. A regra 02 mostra quanto vale cada uma dessas linhas. \textit{Como é calculada:} cada linha tem um tipo, e cada tipo tem a sua própria conta. O sistema testa os tipos na ordem abaixo e usa o primeiro que se aplica à linha. As contas são estas:
 
 \begin{itemize}
-    \item seguro viagem: valor do seguro $\times$ quantidade de pessoas;
-    \item diária internacional: o valor já convertido para reais, guardado na linha;
-    \item passagem: quantidade de pessoas $\times$ passagem individual;
-    \item diária de outro cargo, com o valor digitado à mão: quantidade de diárias $\times$ valor digitado $\times$ quantidade de pessoas;
-    \item diária nacional, com o valor da lista: quantidade de diárias $\times$ valor da diária;
-    \item inscrição: o valor já convertido para reais, guardado na linha;
-    \item custo complementar: o próprio valor.
+    \item \textbf{Seguro viagem:} o valor do seguro vezes o número de pessoas.
+    \item \textbf{Diária internacional:} o sistema não faz conta. Ele usa um valor já convertido para reais, que está guardado na própria linha.
+    \item \textbf{Passagem:} o preço da passagem de uma pessoa vezes o número de pessoas.
+    \item \textbf{Diária de outro cargo:} o número de diárias vezes um valor digitado à mão vezes o número de pessoas.
+    \item \textbf{Diária nacional:} o número de diárias vezes o valor da diária que está na lista de diárias. A diária é o valor pago por dia de viagem.
+    \item \textbf{Inscrição:} também usa o valor já convertido para reais, guardado na linha.
+    \item \textbf{Custo complementar:} é um gasto que não se encaixa nos outros tipos, e o valor é o próprio valor da linha.
 \end{itemize}
 
-\textbf{Regra 03: total previsto de custos.} A regra 03 calcula o total previsto de custos dos eventos aprovados de um ano. Para cada evento aprovado, ela soma as linhas de custo previstas que não foram excluídas. Cada linha soma sete partes:
+Um detalhe diferencia a regra 02 da regra 01: ela não olha o campo \texttt{Excluido}. Ela calcula a linha mesmo quando ela está excluída, e usa o valor da diária da lista mesmo quando essa diária está excluída. \textit{Exemplo:} uma linha de passagem para 2 pessoas, com passagem de R\$ 500,00 por pessoa, vale 2 $\times$ 500 = R\$ 1.000,00. Uma linha de 3 diárias nacionais, com diária de R\$ 100,00 na lista, vale 3 $\times$ 100 = R\$ 300,00.
+
+\textbf{Regra 03: total previsto de custos.} \textit{Para que serve:} quando alguém pede para participar de um evento, a instituição precisa saber quanto ele deve custar. A regra 03 calcula isso, e o resultado aparece na coluna ``R\$ Previsto'' da tela de solicitações (Figura~\ref{fig:tela-solicitacoes}). \textit{Como é calculada:} ela considera só os eventos aprovados de um ano e, para cada um, soma as linhas de custo previstas que não foram excluídas. Cada linha soma sete partes:
 
 \begin{itemize}
     \item diária de outro cargo: quantidade de diárias $\times$ valor digitado $\times$ quantidade de pessoas;
@@ -83,6 +140,6 @@ Esta subseção descreve as regras como elas foram lidas nas fórmulas do sistem
     \item passagem: passagem individual $\times$ quantidade de pessoas.
 \end{itemize}
 
-Cada parte é arredondada para duas casas decimais, ou seja, até os centavos, e o total aparece em reais. Essa conta soma todos os campos da linha, sem olhar o tipo de custo.
+Cada parte é arredondada para duas casas decimais, ou seja, até os centavos, e a conta soma todos os campos da linha, sem olhar o tipo de custo. \textit{Exemplo:} um evento aprovado com 2 pessoas, 3 diárias nacionais de R\$ 100,00 e passagem de R\$ 500,00 por pessoa. As diárias valem 3 $\times$ 100 $\times$ 2 = R\$ 600,00, e as passagens valem 2 $\times$ 500 = R\$ 1.000,00. O custo previsto é R\$ 1.600,00.
 
-\textbf{Regra 04: total realizado.} O valor realizado é o que foi de fato gasto, guardado no campo \texttt{Realizado}. A regra 04 mostra o total realizado dos eventos aprovados de um ano. Ela soma o campo \texttt{Realizado} das linhas de custo que não foram excluídas, dos eventos aprovados e não excluídos daquele ano. As linhas com o campo \texttt{Realizado} vazio ficam de fora da soma.
+\textbf{Regra 04: total realizado.} \textit{Para que serve:} depois do evento, a prestação de contas compara o que foi previsto com o que foi de fato gasto, e a regra 04 dá o total gasto. \textit{Como é calculada:} o valor realizado fica no campo \texttt{Realizado}. A regra soma esse campo nas linhas de custo que não foram excluídas, dos eventos aprovados e não excluídos de um ano. As linhas com o campo vazio ficam de fora. \textit{Exemplo:} um evento aprovado tem linhas com realizado de R\$ 400,00 e R\$ 250,00, uma linha excluída de R\$ 100,00 e uma linha sem valor. O total realizado é R\$ 650,00.

@@ -1,15 +1,27 @@
-Os estudos que vimos no capítulo anterior testam agentes de IA em sistemas grandes ou em projetos de código aberto. Falta ver o que acontece com um sistema pequeno, feito em ferramenta de baixo código (que monta sistemas com poucas linhas de código), dentro de uma instituição pública. É isso que este capítulo mostra.
+O capítulo anterior terminou com uma pergunta pouco explorada: o que acontece quando uma pessoa que desenvolve pede a um agente que atualize parte de um sistema real e de tamanho menor, e depois precisa conferir o que ele fez. Nessa situação, o desenvolvedor precisa descobrir as regras do sistema, definir os resultados esperados e decidir se o código novo pode ser aceito. O estudo de caso deste trabalho coloca o desenvolvimento justamente nessa situação, e este capítulo conta como ele foi feito.
 
-Aqui está o relato prático do trabalho: um sistema real foi copiado, teve os dados trocados por dados inventados, e quatro de suas regras foram convertidas para Python por um agente de IA. Depois, o resultado do Python foi comparado com o que o sistema original mostra. O capítulo segue essa ordem, e cada parte traz as imagens do que foi feito.
+Um sistema real, feito no Power Apps, teve quatro de suas regras convertidas para Python por um agente de IA. Cada uma das três tarefas citadas aparece no capítulo. As regras foram descobertas lendo o sistema antigo. Os resultados esperados foram definidos com dados inventados. A decisão sobre o código novo veio da comparação entre o que o Python calculou e o que era esperado.
+
+O capítulo segue a ordem em que o trabalho foi feito. A seção 4.1 explica o tipo de pesquisa. As seções 4.2 e 4.3 justificam a escolha do sistema e das regras e apresentam o sistema antigo. A 4.4 e a 4.5 mostram os dados inventados e como foram obtidos os resultados esperados. A 4.6 descreve o uso do agente, e a 4.7, a avaliação do resultado.
 
 \section{Estudo de caso}
 \label{sec:estudo-caso}
 
-Esta pesquisa é aplicada, porque parte de um problema real do desenvolvedor: converter um sistema antigo para uma tecnologia nova. É também exploratória, pois o tema tem poucos estudos e o objetivo é entender como o problema aparece, não provar uma teoria.
+Esta pesquisa é aplicada, porque parte de um problema que o desenvolvedor encontra na prática: converter um sistema antigo para uma tecnologia nova. Ela também é exploratória, porque o tema ainda tem poucos estudos. Nesse caso, o objetivo não é provar uma teoria, e sim entender como o problema aparece e quais dificuldades surgem.
 
-O método é o estudo de caso: olhar um sistema de perto, com detalhe, em vez de muitos de longe. A vantagem é poder descrever cada passo e cada dificuldade. O limite é que o resultado vale para este caso, e não para todos os sistemas.
+O método escolhido é o estudo de caso. Em vez de olhar muitos sistemas de longe, olha-se um sistema de perto, com detalhe. A vantagem é poder descrever cada passo e cada dificuldade. O limite é que o resultado vale para este caso, e não para todos os sistemas.
 
-O trabalho seguiu cinco etapas, mostradas na Figura~\ref{fig:etapas}: (1) escolher o sistema e as regras; (2) montar uma cópia do sistema com dados inventados; (3) anotar os resultados que o sistema original mostra, que são os resultados esperados; (4) pedir ao agente de IA que converta as regras para Python; (5) comparar o resultado do Python com o esperado. A análise é qualitativa, pois descreve as dificuldades, e usa números simples, como a quantidade de testes que passaram, para apoiar essa descrição.
+O que se observa neste estudo é o ponto de vista de quem desenvolve: o que foi preciso entender no sistema antigo, o que o agente fez com facilidade, onde houve dúvida e se o resultado final bateu com o esperado. A análise é qualitativa, porque descreve essas dificuldades com palavras. Ela usa também números simples, como a quantidade de testes que passaram, só para apoiar a descrição.
+
+O trabalho seguiu cinco etapas, mostradas na Figura~\ref{fig:etapas}:
+
+\begin{enumerate}
+    \item \textbf{Escolher o sistema e as regras} que seriam convertidas.
+    \item \textbf{Estudar as regras no sistema antigo,} lendo as fórmulas dentro das telas.
+    \item \textbf{Preparar os dados inventados e os resultados esperados.} As fórmulas do sistema antigo foram rodadas com esses dados, e os valores obtidos viraram a referência.
+    \item \textbf{Pedir ao agente de IA que converta as regras para Python,} escrevendo também os testes.
+    \item \textbf{Comparar} o resultado do Python com o esperado.
+\end{enumerate}
 
 \begin{figure}[htbp]
 \centering
@@ -21,10 +33,10 @@ O trabalho seguiu cinco etapas, mostradas na Figura~\ref{fig:etapas}: (1) escolh
     seta/.style={-latex, thick}
 ]
 \node[etapa] (e1) at (0,0)    {(1) Escolher o sistema e as regras};
-\node[etapa] (e2) at (3.1,0)  {(2) Montar uma cópia do sistema com dados inventados};
-\node[etapa] (e3) at (6.2,0)  {(3) Anotar os resultados que o sistema original mostra, que são os resultados esperados};
-\node[etapa] (e4) at (9.3,0)  {(4) Pedir ao agente de IA que converta as regras para Python};
-\node[etapa] (e5) at (12.4,0) {(5) Comparar o resultado do Python com o esperado};
+\node[etapa] (e2) at (3.1,0)  {(2) Estudar as regras no sistema antigo};
+\node[etapa] (e3) at (6.2,0)  {(3) Preparar os dados inventados e os resultados esperados};
+\node[etapa] (e4) at (9.3,0)  {(4) Pedir ao agente que converta para Python};
+\node[etapa] (e5) at (12.4,0) {(5) Comparar o resultado com o esperado};
 \draw[seta] (e1) -- (e2);
 \draw[seta] (e2) -- (e3);
 \draw[seta] (e3) -- (e4);
@@ -37,11 +49,13 @@ O trabalho seguiu cinco etapas, mostradas na Figura~\ref{fig:etapas}: (1) escolh
 \section{Por que este sistema e por que só parte dele}
 \label{sec:escolha-sistema}
 
-O sistema escolhido é o SIS Eventos, que uma instituição pública usa para pedir e controlar a participação em eventos. Escolhi ele por três motivos. Primeiro, é um sistema real, em uso, e não um exemplo feito para teste. Segundo, é feito em Power Apps, e nele as regras de cálculo ficam escondidas dentro das telas, o que torna a conversão mais difícil de enxergar e, por isso, mais interessante de estudar. Terceiro, eu conhecia o sistema e tive acesso a ele durante o estágio, o que permitiu entender cada regra.
+Para observar a situação descrita no capítulo anterior, o estudo precisava de um sistema com três características: ser real e estar em uso, ter tamanho menor e ter regras que não estivessem à vista, de modo que o desenvolvedor tivesse de descobri-las.
 
-Não converti o sistema todo porque ele é grande demais para um trabalho de graduação. O número total de fórmulas não foi contado, mas, como referência do tamanho, a busca no editor encontrou 39 ocorrências da lista de diárias nacionais e 88 da quantidade de pessoas, em várias telas. Em vez de converter tudo, escolhi regras específicas. Os critérios foram: a regra precisa ter um resultado que dê para conferir; as regras juntas precisam ter níveis diferentes de dificuldade; e todas precisam usar dados do próprio sistema.
+O SIS Eventos tem essas características. Ele é usado por uma instituição pública para pedir e controlar a participação de pessoas em eventos, como congressos e feiras. Foi feito no Power Apps, uma plataforma para criar aplicativos com poucas linhas de código. Nele, as contas e as condições ficam em fórmulas dentro das telas, e não em arquivos de código separados, como nos estudos citados. Por isso, para converter uma regra, é preciso primeiro achá-la dentro da tela. Além disso, o acesso ao sistema permitiu ler as fórmulas diretamente nas telas e conferir cada regra.
 
-Foram planejadas três regras, de complexidade simples, média e complexa. Uma quarta regra foi acrescentada durante o trabalho. O Quadro~\ref{quad:regras} mostra as quatro.
+Mesmo sendo menor que os sistemas dos estudos citados, o SIS Eventos tem muitas telas e fórmulas, e converter tudo não caberia em um trabalho de graduação. O número total de fórmulas não foi contado, mas, como referência do tamanho, a busca no editor encontrou 39 ocorrências da lista de diárias nacionais e 88 da quantidade de pessoas, em várias telas. Por isso, foi preciso escolher algumas regras, e a escolha seguiu três critérios. O primeiro foi que a regra tivesse um resultado que desse para conferir, porque sem isso o desenvolvedor não teria como decidir se aceita o código novo. O segundo foi que as regras tivessem níveis de dificuldade diferentes, para observar se o agente se comporta de forma diferente em cada nível. O terceiro foi que todas usassem dados do próprio sistema.
+
+Com esses critérios, foram planejadas três regras, de dificuldade simples, média e complexa. Uma quarta regra foi acrescentada durante o trabalho. O Quadro~\ref{quad:regras} mostra as quatro. Assim, este trabalho mostra a conversão dessas quatro regras, e não a do sistema inteiro.
 
 \begin{table}[htbp]
 \centering
@@ -62,23 +76,16 @@ Foram planejadas três regras, de complexidade simples, média e complexa. Uma q
 \footnotesize Fonte: elaborado pela autora.
 \end{table}
 
-Por isso, este trabalho mostra a conversão dessas quatro regras. Ele não mostra a conversão do sistema inteiro.
-
 \input{capitulos/descricao_sistema}
 
-\section{A cópia do sistema e os dados inventados}
-\label{sec:copia-dados}
+\section{Os dados inventados}
+\label{sec:dados-inventados}
 
-Os dados reais não podem sair da instituição. Para resolver isso, exportei uma cópia do aplicativo original e a liguei a listas de teste, criadas por mim em um SharePoint pessoal, com os mesmos nomes de colunas das listas reais. Assim, o aplicativo é o mesmo, com as mesmas telas e fórmulas, e só os dados mudaram.
+O sistema antigo guarda dados reais da instituição, e esses dados não podem sair dela. Por isso, os testes deste trabalho usam dados inventados, criados para o estudo. Eles têm a mesma forma dos dados reais, mas não representam nenhum evento verdadeiro.
 
-Os dados inventados são 10 eventos, 23 itens de custo e 3 valores de diária, com os mesmos nomes de campos das fórmulas. Os casos foram escolhidos para passar por cada regra. Eles têm eventos de 2025 e 2026, com todos os status, eventos, linhas de custo e diárias marcados como excluídos, cada tipo de custo, inscrição em dólar e em real, e um evento sem custos. Todos os valores são inteiros. O Quadro~\ref{quad:dados} mostra o que cada grupo de dados cobre.
+Os dados ficam em três tabelas, que correspondem às três listas do sistema ligadas às regras: eventos, linhas de custo e diárias nacionais. Elas têm 10 eventos, 23 linhas de custo e 3 valores de diária, e usam os mesmos nomes de campos das fórmulas. Isso permite rodar as fórmulas do sistema antigo e o código em Python com os mesmos dados.
 
-\begin{figure}[htbp]
-\centering
-\caption{Listas de teste no SharePoint}
-\label{fig:listas-teste}
-\fbox{\parbox[c][4cm][c]{0.85\textwidth}{\centering\textbf{[FIGURA PENDENTE: as listas de teste no SharePoint. Print da Anna.]}}}
-\end{figure}
+Os casos foram escolhidos para passar por cada regra, inclusive pelas situações em que uma regra pode errar. Há eventos de 2025 e de 2026, com todas as situações possíveis de um pedido. Há um evento, uma linha de custo e uma diária marcados como excluídos, para testar o campo \texttt{Excluido}. Aparecem os sete tipos de custo, e a inscrição aparece em reais e em dólar. Há também um evento sem nenhuma linha de custo. Todos os valores são números inteiros. O Quadro~\ref{quad:dados} mostra os eventos por situação.
 
 \begin{table}[htbp]
 \centering
@@ -104,14 +111,19 @@ Total & 10 & & \\
 \footnotesize Fonte: elaborado pela autora, com base no arquivo \texttt{estudo-caso/dados/eventos.csv}.
 \end{table}
 
-O limite é que dados inventados não têm a irregularidade dos dados reais, como campos em branco ou erros de digitação.
+Esses mesmos dados foram usados para obter os resultados esperados, como mostra a seção~\ref{sec:esperados}, e para testar o código em Python. O limite é que dados inventados não têm a irregularidade dos dados reais, como campos em branco ou erros de digitação.
 
+% TODO: refazer a 4.5 depois da prática dos testes e da conversão.
 \section{Os resultados esperados}
 \label{sec:esperados}
 
-O resultado esperado é o valor que o sistema atual dá para cada caso. Foram reunidos 41 valores, guardados em uma tabela CSV (o Quadro~\ref{quad:esperados} mostra um trecho). A coluna do texto em reais foi montada a partir do formato das fórmulas, e não copiada da tela.
+Para decidir se o código em Python está certo, é preciso um resultado de referência: o valor que o sistema antigo dá para cada caso. Esse valor é o resultado esperado. Se o código novo for fiel ao sistema antigo, ele deve dar o mesmo número.
 
-\textbf{[PENDENTE: reescrever esta seção depois que a cópia do app rodar com as listas de teste e os valores forem conferidos nela. Hoje os valores vieram do app vazio de teste.]}
+Para obter esses valores, as fórmulas das quatro regras foram copiadas do editor do Power Apps e rodadas em um aplicativo de teste, criado só para isso. Nele, os dados inventados foram carregados com os mesmos nomes das listas do sistema, e as fórmulas foram coladas nos controles sem nenhuma mudança. O sistema real e as suas listas não foram usados. Em seguida, a autora anotou o que o aplicativo mostrou, e esses valores foram guardados em uma tabela CSV. Assim, o valor esperado vem do próprio Power Apps, e não de uma conta feita pela autora ou pelo agente.
+
+A tabela tem 41 valores: as contagens da regra 01, o valor de cada linha de custo da regra 02 e os totais das regras 03 e 04. O Quadro~\ref{quad:esperados} mostra um trecho. A coluna ``Texto em reais'' foi montada a partir do formato de cada fórmula, porque o aplicativo de teste mostra o valor de outra forma.
+
+Esse caminho tem um limite. O aplicativo de teste roda as fórmulas, mas não é o sistema completo, com suas telas e suas listas reais. Por isso, ele mostra que o código em Python reproduz o que as fórmulas calculam nos casos testados, e não que o sistema inteiro foi convertido.
 
 \begin{table}[htbp]
 \centering
@@ -120,7 +132,7 @@ O resultado esperado é o valor que o sistema atual dá para cada caso. Foram re
 \small
 \begin{tabular}{>{\raggedright\arraybackslash}p{1cm}>{\raggedright\arraybackslash}p{3.8cm}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{3.1cm}}
 \toprule
-\textbf{Regra} & \textbf{Caso} & \textbf{Resultado no sistema atual} & \textbf{Texto em reais (montado)} \\
+\textbf{Regra} & \textbf{Caso} & \textbf{Resultado esperado} & \textbf{Texto em reais (montado)} \\
 \midrule
 01 & ano 2026 - Total & \texttt{7} & 7 \\
 01 & ano 2026 - Aprovado & \texttt{3} & 3 \\
