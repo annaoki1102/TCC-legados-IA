@@ -1,0 +1,16 @@
+regras importado de: C:\Users/anna.correa/TCC-legados-IA/estudo-caso/conversao_v2\regras.py
+pasta de dados: C:\Users\anna.correa\TCC-legados-IA\estudo-caso\conversao_v2\dados | eventos 10 custos 23 diarias 3
+ordem dos anos regra 1: [2026, 2025]
+
+POR REGRA (valor): regra -> batem / não batem
+  01 -> 14 / 0
+  02 -> 23 / 0
+  03 -> 2 / 0
+  04 -> 2 / 0
+total: 41 / 0
+
+VALORES QUE NÃO BATEM:
+  nenhum
+
+TEXTOS DIFERENTES:
+  nenhum

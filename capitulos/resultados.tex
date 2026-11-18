@@ -1,7 +1,7 @@
 % Fontes deste capítulo: estudo-caso/registro_conversao.md,
 % estudo-caso/resultados_esperados.csv e o resultado do pytest (42 passed).
 
-Este capítulo mostra o que aconteceu no estudo de caso. Ele descreve o que foi convertido, o resultado dos testes, os desafios que observamos, o que o desenvolvedor pode fazer e os limites do estudo.
+Este capítulo mostra o que aconteceu no estudo de caso. Ele descreve o que foi convertido, o resultado dos testes, os desafios observados, o que o desenvolvedor pode fazer e os limites do estudo.
 
 \section{O que foi convertido}
 \label{sec:convertido}
@@ -15,41 +15,74 @@ Neste estudo, quatro regras do SIS Eventos foram convertidas do Power Fx, a ling
     \item regra 04: total realizado dos eventos aprovados de um ano.
 \end{itemize}
 
-As fórmulas foram copiadas do editor do Power Apps, uma por arquivo. A conversão foi feita pelo agente Claude Code, com o modelo Claude Opus 5.5. O código ficou em um arquivo Python, e os testes foram escritos com a ferramenta pytest.
+As fórmulas foram copiadas do editor do Power Apps, uma por arquivo. A conversão foi feita pelo agente Claude Code, com o modelo Claude Opus 5.5, em duas rodadas (Seção~\ref{sec:uso-agente}). O código ficou em um arquivo Python, e os testes foram escritos com a ferramenta pytest.
 
 Os dados usados são inventados. São três tabelas, com os mesmos nomes de campos das fórmulas: eventos, linhas de custo e diárias nacionais. Os casos cobrem os anos de 2025 e 2026 e 23 linhas de custo.
 
-Para saber o resultado certo de cada caso, as fórmulas originais foram rodadas em um app vazio do Power Apps, criado só para o teste, com esses mesmos dados inventados. O app real não foi usado. A autora anotou o que o app mostrou em uma tabela de resultados esperados. Por exemplo, em 2026 o total previsto foi R\$~19.450,00 e o total realizado foi R\$~20.350,00. Os testes comparam a saída do código em Python com essa tabela.
+Para saber o resultado certo de cada caso, as fórmulas originais foram rodadas em um aplicativo de teste do Power Apps, criado só para esse fim, com esses mesmos dados inventados. O aplicativo real não foi usado. A autora anotou o que o aplicativo mostrou em uma tabela de resultados esperados. Por exemplo, em 2026 o total previsto foi R\$~19.450,00 e o total realizado foi R\$~20.350,00. O código em Python foi comparado com essa tabela por um script (Seção~\ref{sec:testes}).
 
-\section{Resultado dos testes}
+\section{Resultado da comparação e dos testes}
 \label{sec:testes}
 
-Ao todo, foram 42 testes, e os 42 passaram. Nenhum teste falhou. Cada regra passou na primeira execução, ou seja, com uma tentativa só. O Quadro~\ref{tab:testes} mostra o resultado por regra.
+A comparação entre o código em Python e os valores esperados foi realizada por um script, executado fora da pasta do agente (Apêndice~\ref{ap:comparacao}). Dos 41 valores esperados, os 41 foram iguais aos calculados pelo código. O Quadro~\ref{quad:comparacao} apresenta o resultado por regra.
 
 \begin{table}[htb]
 \centering
-\caption{Resultado dos testes por regra}
-\label{tab:testes}
+\caption{Resultado da comparação com os valores esperados, por regra}
+\label{quad:comparacao}
 \small
-\begin{tabular}{p{5.6cm}p{1.8cm}p{1.8cm}p{2cm}}
+\begin{tabular}{p{5.6cm}p{2.2cm}p{1.6cm}p{1.8cm}}
 \toprule
-\textbf{Regra} & \textbf{Testes} & \textbf{Passaram} & \textbf{Tentativas} \\
+\textbf{Regra} & \textbf{Valores esperados} & \textbf{Iguais} & \textbf{Diferentes} \\
 \midrule
-01 -- eventos por ano & 15 & 15 & 1 \\
-02 -- valor da linha de custo & 23 & 23 & 1 \\
-03 -- total previsto & 2 & 2 & 1 \\
-04 -- total realizado & 2 & 2 & 1 \\
+01 -- eventos por ano & 14 & 14 & 0 \\
+02 -- valor da linha de custo & 23 & 23 & 0 \\
+03 -- total previsto & 2 & 2 & 0 \\
+04 -- total realizado & 2 & 2 & 0 \\
 \midrule
-Total & 42 & 42 & -- \\
+Total & 41 & 41 & 0 \\
 \bottomrule
 \end{tabular}
 \\[2pt]
-\footnotesize Fonte: elaborado pela autora, com base no resultado do pytest.
+\footnotesize Fonte: elaborado pela autora, com base na saída do script de comparação.
 \end{table}
 
-Na regra 01, há 14 testes de contagem e um teste da ordem dos anos. Na regra 02, há um teste por linha de custo, e cada um confere o valor e o texto em reais. Nas regras 03 e 04, há um teste para 2025 e outro para 2026.
+Nas regras 02, 03 e 04, os textos em reais gerados pelo código também foram idênticos aos da tabela de resultados esperados. Na regra 01, a lista de anos apareceu na mesma ordem da fórmula, do maior para o menor.
 
-Os testes leem os valores esperados direto da tabela de resultados. Eles não têm valores esperados escritos à mão.
+Além disso, os 45 testes escritos pelo agente foram aprovados (Apêndice~\ref{ap:pytest}). Eles se dividem em: 3 de leitura dos dados e formatação, 3 da regra 01, 28 da regra 02 (um por linha de custo e cinco casos especiais), 7 da regra 03 e 4 da regra 04. Nesses testes, os valores esperados estão escritos no próprio arquivo de testes, e não são lidos da tabela de resultados esperados do estudo. Por isso, eles não substituem a comparação apresentada acima.
+
+\section{Comparação entre as duas conversões}
+\label{sec:comparacao-conversoes}
+
+As duas conversões registraram dúvidas sobre as fórmulas. A primeira as anotou no registro da conversão, e a segunda, no arquivo de dúvidas. O Quadro~\ref{quad:duvidas} apresenta os pontos que apareceram nas duas.
+
+\begin{table}[htb]
+\centering
+\caption{Pontos registrados nas duas conversões}
+\label{quad:duvidas}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{6.6cm}>{\raggedright\arraybackslash}p{1.4cm}>{\raggedright\arraybackslash}p{3.4cm}}
+\toprule
+\textbf{Ponto} & \textbf{Regras} & \textbf{Como foi registrado} \\
+\midrule
+A diária nacional é multiplicada pela quantidade de pessoas na regra 3, mas não na regra 2 & 2 e 3 & Nas duas conversões \\
+A diária excluída é usada pela regra 2 e ignorada pela regra 3 & 2 e 3 & Nas duas conversões \\
+A regra 2 não filtra as linhas excluídas & 2 & Nas duas conversões \\
+A regra 3 soma todos os campos da linha, sem olhar o tipo de custo & 3 & Nas duas conversões \\
+O ``-'' da função \texttt{Coalesce} nunca aparece & 4 & Nas duas conversões \\
+A comparação com ``US\$'' é exata & 3 & Nas duas conversões \\
+O que fazer quando o valor convertido está vazio & 2 & Nas duas conversões, com decisões diferentes \\
+\bottomrule
+\end{tabular}
+\\[2pt]
+\footnotesize Fonte: elaborado pela autora, com base no registro da primeira conversão e no arquivo de dúvidas da segunda.
+\end{table}
+
+Nos casos testados, esses pontos apareceram tanto na conversão em que o agente tinha acesso aos resultados esperados quanto na que não tinha. Isso sugere que eles vêm das fórmulas, e não da forma como o agente foi conduzido em uma das rodadas.
+
+Houve também pontos registrados em apenas uma das conversões. Só a primeira apontou que a função \texttt{Year()} pode depender do fuso horário, que a coluna do ano se chama \texttt{Value} por causa da função \texttt{Distinct} e que não ficou claro a qual lista pertence o campo \texttt{ID} nos filtros da regra 3. Só a segunda apontou que a comparação de texto dos status é exata, que um evento sem data de início causa erro e que a ordem dos casos na descrição da regra 2 é diferente da ordem na fórmula.
+
+O caso do valor convertido vazio mostra um limite. Quando a fórmula não diz o que fazer, cada conversão tomou uma decisão: a primeira devolveu o texto ``R\$~'', e a segunda gera um erro. Nenhuma das duas decisões pôde ser confirmada com os dados do estudo, que não têm esse caso.
 
 \section{Desafios observados}
 \label{sec:desafios-observados}
@@ -62,19 +95,19 @@ A regra 02 calcula o valor da linha mesmo quando a linha está marcada como excl
 
 \subsection*{A diária nacional não é multiplicada pelas pessoas}
 
-Na regra 02, a diária nacional da lista é calculada como quantidade de diárias $\times$ valor da diária, sem multiplicar pela quantidade de pessoas. Nos casos testados, o custo 4 tem 2 pessoas e deu R\$~800,00, que é 2 diárias $\times$ 400. Esse comportamento só aparece quando se lê a fórmula. Por isso, ligamos esse ponto ao desafio das regras escondidas do Quadro~\ref{tab:desafios}.
+Na regra 02, a diária nacional da lista é calculada como quantidade de diárias $\times$ valor da diária, sem multiplicar pela quantidade de pessoas. Nos casos testados, o custo 4 tem 2 pessoas e deu R\$~800,00, que é 2 diárias $\times$ 400. Esse comportamento só aparece quando se lê a fórmula. Por isso, esse ponto foi associado ao desafio das regras escondidas do Quadro~\ref{tab:desafios}.
 
 \subsection*{A diária excluída ainda é usada}
 
-A regra 02 busca o valor da diária na lista de diárias sem tirar as que estão excluídas. Nos casos testados, o custo 5 usa uma diária excluída e deu R\$~1.000,00. A regra 03, por outro lado, ignora as diárias excluídas. É o mesmo caso da regra dos excluídos espalhada em várias fórmulas, e por isso também ligamos esse ponto às regras escondidas do Quadro~\ref{tab:desafios}.
+A regra 02 busca o valor da diária na lista de diárias sem tirar as que estão excluídas. Nos casos testados, o custo 5 usa uma diária excluída e deu R\$~1.000,00. A regra 03, por outro lado, ignora as diárias excluídas. É o mesmo caso da regra dos excluídos espalhada em várias fórmulas, e por isso esse ponto também foi associado às regras escondidas do Quadro~\ref{tab:desafios}.
 
 \subsection*{O ``-'' da regra 04 nunca aparece}
 
-A regra 04 usa a função \texttt{Coalesce} para mostrar ``-'' quando não há valor. Mas o primeiro argumento sempre começa com ``R\$'', então nunca fica vazio, e o ``-'' não aparece. O código em Python também não devolve ``-''. Não encontramos ligação direta desse ponto com os desafios do Quadro~\ref{tab:desafios}.
+A regra 04 usa a função \texttt{Coalesce} para mostrar ``-'' quando não há valor. Mas o primeiro argumento sempre começa com ``R\$'', então nunca fica vazio, e o ``-'' não aparece. O código em Python também não devolve ``-''. Não foi identificada ligação direta desse ponto com os desafios do Quadro~\ref{tab:desafios}.
 
 \subsection*{De onde vêm os valores convertidos}
 
-Na regra 02, a diária internacional e a inscrição não fazem conta. Elas só mostram dois campos já guardados na linha: \texttt{ValorConvertido} e \texttt{InscricaoConvertida}. Neste estudo, não sabemos de onde vêm esses valores. Eles podem ser calculados em outra parte do sistema, que não foi vista. Isso parece com o desafio das regras escondidas do Quadro~\ref{tab:desafios}, no qual o agente não percebeu partes vizinhas do sistema. Mas, como não sabemos a origem dos campos, essa ligação não pôde ser confirmada.
+Na regra 02, a diária internacional e a inscrição não fazem conta. Elas só mostram dois campos já guardados na linha: \texttt{ValorConvertido} e \texttt{InscricaoConvertida}. Neste estudo, a origem desses valores não foi identificada. Eles podem ser calculados em outra parte do sistema, que não foi vista. Isso parece com o desafio das regras escondidas do Quadro~\ref{tab:desafios}, no qual o agente não percebeu partes vizinhas do sistema. Como a origem dos campos não é conhecida, essa ligação não pôde ser confirmada.
 
 \subsection*{A mesma conta feita de dois jeitos}
 
@@ -82,17 +115,17 @@ O valor das linhas de custo aparece em duas fórmulas: na regra 02, linha por li
 
 \subsection*{O texto em reais}
 
-O app mostra os valores como texto, no formato ``R\$~1.234,56'', que vem da função \texttt{Text()} do Power Fx. O código em Python precisou montar esse mesmo texto. Também ficou uma dúvida: quando a regra 02 não tem resultado, o app parece mostrar só ``R\$'', porque o \texttt{Text()} de um valor vazio dá texto vazio. Esse caso não foi testado. Não encontramos ligação direta desse ponto com os desafios do Quadro~\ref{tab:desafios}.
+O app mostra os valores como texto, no formato ``R\$~1.234,56'', que vem da função \texttt{Text()} do Power Fx. O código em Python precisou montar esse mesmo texto. Também ficou uma dúvida: quando a regra 02 não tem resultado, o app parece mostrar só ``R\$'', porque o \texttt{Text()} de um valor vazio dá texto vazio. Esse caso não foi testado. Não foi identificada ligação direta desse ponto com os desafios do Quadro~\ref{tab:desafios}.
 
 \section{O que o desenvolvedor pode fazer}
 \label{sec:desenvolvedor}
 
-A partir do que observamos neste estudo, sugerimos alguns cuidados. Eles vêm de um caso só e de poucas regras, então são sugestões, e não regras para qualquer sistema.
+A partir do que foi observado neste estudo, sugerem-se alguns cuidados. Eles vêm de um caso só e de poucas regras, então são sugestões, e não regras para qualquer sistema.
 
 \begin{itemize}
     \item \textbf{Listar onde cada regra aparece.} Neste estudo, a regra dos registros excluídos estava em várias fórmulas, e cada uma tratava isso de um jeito. Antes de converter, vale procurar todas as fórmulas que usam o campo \texttt{Excluido} e anotar quais olham esse campo e quais não olham.
     \item \textbf{Pedir ao agente que aponte regras duplicadas.} O valor das linhas de custo aparecia nas regras 02 e 03, com contas diferentes. Pedir ao agente que compare as fórmulas e mostre onde a mesma conta é feita de mais de um jeito pode ajudar a achar essas diferenças antes dos testes.
-    \item \textbf{Perguntar à equipe a origem dos campos guardados.} Neste estudo, não soubemos de onde vêm \texttt{ValorConvertido} e \texttt{InscricaoConvertida}. Perguntar ao responsável pelo sistema antes de converter evita copiar um campo sem saber como ele é calculado.
+    \item \textbf{Perguntar à equipe a origem dos campos guardados.} Neste estudo, a origem de \texttt{Valor\allowbreak Convertido} e \texttt{Inscricao\allowbreak Convertida} não foi identificada. Perguntar ao responsável pelo sistema antes de converter evita copiar um campo sem saber como ele é calculado.
     \item \textbf{Escrever testes com centavos e casos de borda.} Nos casos testados, todos os valores eram inteiros, e vários casos ficaram sem teste. Incluir valores com centavos, anos sem eventos aprovados e linhas sem nenhum caso que se aplique ajudaria a testar o arredondamento e os comportamentos que não apareceram.
     \item \textbf{Conferir o texto na tela.} O texto em reais foi montado a partir do formato das fórmulas, e não copiado da tela. Copiar alguns textos direto do app ajudaria a confirmar o formato, o caso do ``R\$'' sozinho e o ``-'' da regra 04.
 \end{itemize}
@@ -102,11 +135,13 @@ A partir do que observamos neste estudo, sugerimos alguns cuidados. Eles vêm de
 
 Este estudo tem limites que precisam ser levados em conta.
 
-Primeiro, os dados inventados e o roteiro do app de teste foram criados por nós, com a ajuda do mesmo agente que depois fez a conversão. Esse agente também fez antes as contas à mão dos totais. Ou seja, o agente teve acesso aos resultados esperados.
+Primeiro, os dados inventados, o roteiro do aplicativo de teste e as contas à mão dos totais foram feitos por um agente de IA, o mesmo que depois realizou a primeira conversão. Na primeira conversão, esse agente teve acesso aos resultados esperados, pois o arquivo constava entre os materiais e os testes liam seus valores. Na segunda conversão, o agente recebeu apenas as fórmulas e os dados e não teve acesso a esses resultados. Mesmo assim, os dados são os mesmos, de modo que os casos de teste não são independentes do agente da primeira rodada.
 
-Segundo, a coluna com o texto mostrado na tela, como ``R\$~19.450,00'', não foi copiada da tela. Ela foi montada a partir do formato das fórmulas, com os valores anotados pela autora.
+Segundo, as duas conversões usaram o mesmo agente e o mesmo modelo. O agente da segunda foi instruído a trabalhar só na pasta isolada, e o histórico da sessão mostra que ele o fez, mas o isolamento não foi técnico.
 
-Terceiro, todos os valores dos dados são inteiros. Por isso, nenhum caso testa centavos nem o arredondamento. Também ficaram sem teste:
+Terceiro, a coluna com o texto mostrado na tela, como ``R\$~19.450,00'', não foi copiada da tela. Ela foi montada a partir do formato das fórmulas, com os valores anotados pela autora.
+
+Quarto, todos os valores dos dados são inteiros. Por isso, nenhum caso testa centavos nem o arredondamento. Também ficaram sem teste:
 
 \begin{itemize}
     \item um ano que só tem eventos excluídos;
@@ -115,19 +150,19 @@ Terceiro, todos os valores dos dados são inteiros. Por isso, nenhum caso testa 
     \item uma linha da regra 02 sem nenhum caso que se aplique, ou com o valor convertido vazio.
 \end{itemize}
 
-Quarto, foram convertidas só quatro regras de um sistema maior.
+Quinto, foram convertidas só quatro regras de um sistema maior.
 
-Quinto, o tempo gasto em cada etapa não foi registrado. Por isso, o custo em tempo do uso do agente não foi avaliado neste estudo.
+Sexto, a segunda conversão levou cerca de três minutos, segundo o histórico do agente. O tempo gasto nas demais etapas, como preparar os dados e o aplicativo de teste, não foi registrado. Por isso, o custo em tempo não foi avaliado neste estudo.
 
-Por tudo isso, o fato de todas as regras terem passado na primeira tentativa não permite concluir que a conversão é simples. Nos casos testados, o código em Python deu os mesmos resultados do app de teste. Mas os comportamentos descritos na Seção~\ref{sec:desafios-observados} só foram vistos porque as fórmulas foram lidas com atenção, e não porque algum teste falhou.
+Por tudo isso, o fato de o código ter coincidido com os valores esperados na primeira execução dos testes não permite concluir que a conversão é simples. Nos casos testados, o código em Python deu os mesmos resultados do aplicativo de teste. Mas os comportamentos descritos na Seção~\ref{sec:desafios-observados} só foram vistos porque as fórmulas foram lidas com atenção, e não porque algum teste falhou.
 
 \subsection{Pontos não verificados}
 \label{sec:nao-verificados}
 
 Alguns pontos das regras ficaram sem confirmação neste estudo:
 
-\begin{itemize}
-    \item não verificamos com o responsável pelo sistema se a diária nacional deve ser calculada por pessoa. Na regra 02, a conta da linha não multiplica pela quantidade de pessoas, mas na regra 03 o total multiplica;
-    \item não verificamos de onde vêm os campos de valor convertido, \texttt{ValorConvertido} e \texttt{InscricaoConvertida};
-    \item não verificamos a origem da variável do ano (\texttt{VarAno\allowbreak Exercicio\allowbreak Selecionado}), usada nas regras 03 e 04. No app de teste, ela foi definida à mão.
+\begin{itemize}\sloppy
+    \item não foi verificado com o responsável pelo sistema se a diária nacional deve ser calculada por pessoa. Na regra 02, a conta da linha não multiplica pela quantidade de pessoas, mas na regra 03 o total multiplica;
+    \item não foi verificada a origem dos campos de valor convertido, \texttt{Valor\allowbreak Convertido} e \texttt{Inscricao\allowbreak Convertida};
+    \item não foi verificada a origem da variável do ano (\texttt{VarAno\allowbreak Exercicio\allowbreak Selecionado}), usada nas regras 03 e 04. No aplicativo de teste, ela foi definida à mão.
 \end{itemize}

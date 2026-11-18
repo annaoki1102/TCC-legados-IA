@@ -1,0 +1,2 @@
+Converta as 4 regras de negócio das fórmulas em formulas/ (Power Fx) para Python. Use Decimal para dinheiro. Cada regra vira uma função em regras.py. Use os CSV de dados/ como entrada. Se algo na fórmula for ambíguo, não adivinhe: anote a dúvida em DUVIDAS.md. Escreva também testes em pytest.
+Nota: nas cópias das fórmulas desta pasta, foram removidas as linhas de fonte e de origem do cabeçalho; a descrição e a fórmula são idênticas às originais.

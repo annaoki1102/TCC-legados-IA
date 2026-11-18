@@ -56,7 +56,6 @@ No total, o aplicativo tem nove telas, mostradas na Figura~\ref{fig:lista-telas}
 
 As regras estudadas não ficam em uma tela ou arquivo próprio. Elas estão em fórmulas, escritas em Power Fx, a linguagem de fórmulas do Power Apps, dentro dos componentes das telas. O Código~\ref{cod:formula-regra03} mostra um exemplo: a fórmula do total previsto de custos dos eventos aprovados de um ano, que é a regra 03. Nela, cada linha de custo soma sete partes, e só lendo a fórmula é possível saber como a conta é feita. O print do editor do Power Apps com a fórmula do custo previsto de cada evento, que aparece na coluna ``R\$ Previsto'', está no Apêndice~\ref{ap:formula-regra03}. A subseção a seguir descreve as quatro regras como foram lidas nas fórmulas.
 
-% TODO: confirmar no Power Apps a origem desta fórmula (ButtonCanvas6_3) e como ela se liga ao print do Apêndice.
 \noindent\begin{minipage}{\textwidth}
 \begin{lstlisting}[caption={Fórmula do total previsto de custos dos eventos aprovados de um ano (regra 03)}, label={cod:formula-regra03}, language={}, basicstyle={\fontsize{9}{11}\selectfont\ttfamily}, breaklines=true, upquote=true]
 Text(
@@ -104,7 +103,7 @@ Text(
   "[$-pt-BR]R$ #.##0,00"
 )
 \end{lstlisting}
-\centering\footnotesize Fonte: elaborado pela autora, com base no arquivo \texttt{estudo-caso/formulas/03\_total\_previsto.txt}.
+\centering\footnotesize Fonte: elaborado pela autora, com base na fórmula copiada do SIS Eventos (arquivo \texttt{estudo-caso/formulas/03\_total\_previsto.txt}).
 \end{minipage}
 
 \subsection{Como as quatro regras funcionam}

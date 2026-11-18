@@ -29,9 +29,17 @@
     \cidade{Brasília}
     \ano{2026}
     \coordenacao{Coordenação do Curso de Sistemas de Informação}
-    \titulacao{ Sistemas de Informação}
-    \orientador{Prof. Dr. Xxxx}
+    \titulacao{Sistemas de Informação}
+    \orientador{Prof. Regiano da Silva Alves}
 %--------------------------------------------
+
+% Atalhos para usar os campos acima na ficha catalográfica e na folha de aprovação
+\makeatletter
+\newcommand{\imprimirtituloTCC}{\@title}
+\newcommand{\imprimirorientadorTCC}{\@orientador}
+\newcommand{\imprimircoordenacaoTCC}{\@coordenacao}
+\newcommand{\imprimircursoTCC}{\@titulacao}
+\makeatother
 
 
 \renewcommand{\listfigurename}{}
@@ -60,10 +68,10 @@
     boxsep=20pt, % Espaçamento entre o texto e as bordas
     frame style={draw=black, double distance=4pt, double, ultra thick}, % Estilo da segunda borda
     ]
-    ?Sobrenome?, ?Nome?. 
-    \hspace{1cm} Título : \titulo / ?author?. -- Brasília, 2026. 
+    CORRÊA, Anna Beatriz Resende Oki.
+    \hspace{1cm} \imprimirtituloTCC{} / \imprimirautor. -- Brasília, 2026.
     \hspace{1cm} \pageref{LastPage} f. \\[2mm]
-   	Orientador: ?orientador?. 
+   	Orientador: \imprimirorientadorTCC.
     \hspace{1cm}Trabalho de Conclusão de Curso (Graduação -- Sistemas de Informação) -- Centro Universitário do Distrito Federal -- UDF. Coordenação do Curso de Sistemas de Informação, Brasília, DF, 2026. \\[2mm]
    	1. ?Assunto?. 2. ?Assunto?. 3. ?Assunto?. I. ?Título?. \\[2mm]
    	\begin{flushright}
@@ -82,17 +90,17 @@
 
 \vspace*{10pt}
 \begin{center}
-?Titulo?
+\imprimirtituloTCC
 \vspace*{60pt}
 \begin{adjustwidth}{6cm}{-1cm}
-Trabalho de conclusão de curso apresentado à ?Coordenação?, do Centro Universitário do Distrito Federal -- UDF, como requisito parcial para obtenção do grau de bacharel / tecnólogo em ?Curso?. \\[2mm]
+Trabalho de conclusão de curso apresentado à \imprimircoordenacaoTCC, do Centro Universitário do Distrito Federal -- UDF, como requisito parcial para obtenção do grau de bacharel em \imprimircursoTCC. \\[2mm]
 
-Orientador: ?orientador?. 
+Orientador: \imprimirorientadorTCC.
 \end{adjustwidth}
 \vspace*{40pt}
 Brasília, \underline{\hspace{2cm}} de \underline{\hspace{4cm}} de 2026.
 
-\vspace*{60pt}
+\vspace*{30pt}
 \begin{tabular}{p{7cm}}
     \hline
     \centering NOME DO EXAMINADOR \\
@@ -158,7 +166,7 @@ Nelson Mandela
 % -------------------------------
 \newpage
 \begin{resumo2}
-Este trabalho trata da atualização de sistemas legados para novas tecnologias com o uso de agentes de IA para desenvolvimento. O objetivo foi identificar os desafios desse uso, do ponto de vista do desenvolvimento. Para isso, foi feita uma revisão de estudos recentes sobre o tema, e os desafios encontrados foram organizados em categorias. Depois, foi feito um estudo de caso com um sistema real, feito em Power Apps. Com a ajuda de um agente de IA, quatro regras desse sistema foram convertidas para Python. Os resultados do código novo foram comparados, por testes, com os de um app de teste do Power Apps, que rodou as fórmulas originais com dados inventados. Nos casos testados, os resultados foram iguais. Mesmo assim, a leitura das fórmulas mostrou comportamentos escondidos nas regras, como uma regra que não ignora os registros excluídos e uma mesma conta feita de dois jeitos. Neste estudo, o desafio mais observado foi o das regras escondidas. Como foram poucas regras e os dados foram inventados, esses resultados valem só para o caso estudado.
+Este trabalho trata da atualização de sistemas legados para novas tecnologias com o uso de agentes de IA para desenvolvimento. O objetivo é identificar os desafios desse uso, do ponto de vista do desenvolvimento. Para isso, foi realizada uma revisão de estudos recentes sobre o tema, e os desafios encontrados foram organizados em categorias. Em seguida, foi conduzido um estudo de caso com um sistema real, feito em Power Apps, no qual quatro regras de negócio foram convertidas para Python com o auxílio de um agente de IA. A conversão foi realizada duas vezes, a segunda em uma pasta isolada, sem acesso do agente aos resultados esperados. Os resultados do código novo foram comparados com os obtidos pelas fórmulas originais, executadas em um aplicativo de teste com dados inventados, e as dúvidas registradas em cada conversão foram analisadas. Por se tratar de poucas regras e de dados inventados, as conclusões se aplicam apenas ao caso estudado.
 
 \vspace*{20pt}
 \textbf{Palavras-chave:} Sistemas legados. Modernização de software. Agentes de IA. Desenvolvimento de software.
@@ -170,7 +178,7 @@ Este trabalho trata da atualização de sistemas legados para novas tecnologias 
 % -------------------------------
 \newpage
 \begin{abstract}
-This work addresses the update of legacy systems to new technologies using AI development agents. The objective was to identify the challenges of this use from a development perspective. To do so, a review of recent studies on the subject was carried out, and the challenges found were organized into categories. Then, a case study was carried out with a real system built in Power Apps. With the help of an AI agent, four rules of this system were converted to Python. The results of the new code were compared, through tests, with those of a Power Apps test app that ran the original formulas with made-up data. In the tested cases, the results were the same. Even so, reading the formulas revealed hidden behaviors in the rules, such as a rule that does not ignore deleted records and the same calculation done in two different ways. In this study, the most observed challenge was hidden rules. Since only a few rules were converted and the data was made up, these results apply only to the case studied.
+This work addresses the update of legacy systems to new technologies using AI development agents. The objective is to identify the challenges of this use from a development perspective. To do so, a review of recent studies on the subject was carried out, and the challenges found were organized into categories. Then, a case study was conducted with a real system built in Power Apps, in which four business rules were converted to Python with the help of an AI agent. The conversion was carried out twice, the second in an isolated folder, without the agent having access to the expected results. The results of the new code were compared with those obtained by the original formulas, run in a test application with made-up data, and the doubts recorded in each conversion were analyzed. Since only a few rules were converted and the data were made up, the conclusions apply only to the case studied.
 
 \vspace*{20pt}
 \textbf{Keywords:} Legacy systems. Software modernization. AI agents. Software development.

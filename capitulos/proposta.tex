@@ -2,7 +2,7 @@ O capítulo anterior terminou com uma pergunta pouco explorada: o que acontece q
 
 Um sistema real, feito no Power Apps, teve quatro de suas regras convertidas para Python por um agente de IA. Cada uma das três tarefas citadas aparece no capítulo. As regras foram descobertas lendo o sistema antigo. Os resultados esperados foram definidos com dados inventados. A decisão sobre o código novo veio da comparação entre o que o Python calculou e o que era esperado.
 
-O capítulo segue a ordem em que o trabalho foi feito. A seção 4.1 explica o tipo de pesquisa. As seções 4.2 e 4.3 justificam a escolha do sistema e das regras e apresentam o sistema antigo. A 4.4 e a 4.5 mostram os dados inventados e como foram obtidos os resultados esperados. A 4.6 descreve o uso do agente, e a 4.7, a avaliação do resultado.
+O capítulo segue a ordem em que o trabalho foi feito. A seção~\ref{sec:estudo-caso} explica o tipo de pesquisa. As seções~\ref{sec:escolha-sistema} e~\ref{sec:sistema} justificam a escolha do sistema e das regras e apresentam o sistema antigo. A~\ref{sec:dados-inventados} e a~\ref{sec:esperados} mostram os dados inventados e como foram obtidos os resultados esperados. A~\ref{sec:uso-agente} descreve o uso do agente, e a~\ref{sec:avaliacao}, a avaliação do resultado.
 
 \section{Estudo de caso}
 \label{sec:estudo-caso}
@@ -132,7 +132,7 @@ Esse caminho tem um limite. O aplicativo de teste roda as fórmulas, mas não é
 \small
 \begin{tabular}{>{\raggedright\arraybackslash}p{1cm}>{\raggedright\arraybackslash}p{3.8cm}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{3.1cm}}
 \toprule
-\textbf{Regra} & \textbf{Caso} & \textbf{Resultado esperado} & \textbf{Texto em reais (montado)} \\
+\textbf{Regra} & \textbf{Caso} & \textbf{Resultado esperado} & \textbf{Texto em reais} \\
 \midrule
 01 & ano 2026 - Total & \texttt{7} & 7 \\
 01 & ano 2026 - Aprovado & \texttt{3} & 3 \\
@@ -151,47 +151,85 @@ Esse caminho tem um limite. O aplicativo de teste roda as fórmulas, mas não é
 \section{O uso do agente de IA}
 \label{sec:uso-agente}
 
-A conversão foi feita com o Claude Code, um agente de IA que lê os arquivos do projeto, escreve código e roda testes. O modelo usado foi o Claude Opus 5.5. O processo teve estes passos:
-
-\begin{enumerate}
-    \item as fórmulas, os dados inventados e a tabela de resultados esperados ficaram em arquivos no projeto;
-    \item as quatro regras foram pedidas ao agente de uma vez;
-    \item o agente escreveu o código e os testes juntos. Ele podia escrever os testes, mas não podia mudar a tabela de resultados esperados nem os dados, e os testes tinham de ler os valores esperados dessa tabela, sem valores escritos à mão;
-    \item o agente rodou os testes. Se algum falhasse, ele devia corrigir o código, e não os testes, e contar quantas tentativas foram necessárias;
-    \item no fim, o agente escreveu um registro com o que entendeu de cada regra, o que errou, o que ficou ambíguo, quantas tentativas fez e se a regra passou.
-\end{enumerate}
-
-O agente também recebeu duas orientações: ser fiel ao sistema antigo, inclusive nos comportamentos estranhos, sem ``consertar'' as regras; e usar o tipo \texttt{Decimal} do Python para os valores em dinheiro. O \texttt{Decimal} evita pequenos erros de arredondamento dos números comuns. Os testes usam o pytest, ferramenta que roda testes automáticos e diz quais passaram (Figura~\ref{fig:pytest}).
-
-\begin{figure}[htbp]
-\centering
-\caption{Saída do pytest}
-\label{fig:pytest}
-\fbox{\parbox[c][4cm][c]{0.85\textwidth}{\centering\textbf{[FIGURA PENDENTE: saída do pytest com 42 testes passando. Print do terminal da Anna.]}}}
-\end{figure}
+A conversão das regras foi realizada duas vezes com o Claude Code, um agente de inteligência artificial capaz de ler arquivos, escrever código e executar comandos no computador. Em ambas, o modelo utilizado foi o Claude Opus 5.5. A segunda conversão foi feita para obter um resultado mais isolado, em que o agente não tinha acesso aos resultados esperados, e para comparar esse resultado com o da primeira. O Quadro~\ref{quad:duas-conversoes} apresenta as diferenças entre as duas.
 
 \begin{table}[htbp]
 \centering
-\caption{Tentativas, resultado e dificuldade principal por regra}
-\label{quad:agente}
+\caption{Comparação entre as duas conversões}
+\label{quad:duas-conversoes}
 \small
-\begin{tabular}{>{\raggedright\arraybackslash}p{1cm}>{\raggedright\arraybackslash}p{1.9cm}>{\raggedright\arraybackslash}p{1.6cm}>{\raggedright\arraybackslash}p{6.6cm}}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{4.3cm}}
 \toprule
-\textbf{Regra} & \textbf{Tentativas} & \textbf{Passou} & \textbf{Dificuldade principal} \\
+ & \textbf{Primeira conversão} & \textbf{Segunda conversão} \\
 \midrule
-01 & 1 & Sim & Um ano que só tem eventos excluídos aparece na lista de anos, mas sai pelo filtro. Esse caso não foi testado. \\
-02 & 1 & Sim & Não se sabe de onde vêm os campos \texttt{ValorConvertido} e \texttt{InscricaoConvertida}. \\
-03 & 1 & Sim & Na fórmula, foi preciso deduzir a qual lista pertence cada \texttt{ID}. \\
-04 & 1 & Sim & O ``-'' da função \texttt{Coalesce} nunca aparece. \\
+Data & 11 de novembro de 2026 & 18 de novembro de 2026 \\
+Local de execução & Pasta do projeto & Pasta isolada \\
+Dados inventados & Criados pelo agente, em etapas anteriores & Reaproveitados da primeira \\
+Acesso aos resultados esperados & Sim, pois o arquivo constava entre os materiais e os testes liam seus valores & Não \\
+Testes & 42, com os valores lidos da tabela & 45, com os valores escritos nos testes \\
+Tentativas & Uma por regra & Uma, com os testes executados uma vez \\
+Resultado & 42 de 42 testes aprovados & 45 de 45 testes aprovados \\
 \bottomrule
 \end{tabular}
 \\[2pt]
-\footnotesize Fonte: elaborado pela autora, com base no arquivo \texttt{estudo-caso/registro\_conversao.md}.
+\footnotesize Fonte: elaborado pela autora.
 \end{table}
+
+A segunda conversão é a de referência para a verificação e é descrita a seguir. A comparação entre as duas, em especial das dúvidas que cada uma registrou, é apresentada na Seção~\ref{sec:comparacao-conversoes}.
+
+A execução da segunda conversão ocorreu em uma pasta isolada, a fim de que o agente tivesse acesso apenas ao material necessário. O Quadro~\ref{quad:agente-recebeu} apresenta o que foi fornecido ao agente nessa conversão e o que não foi.
+
+\begin{table}[htbp]
+\centering
+\caption{Material fornecido ao agente}
+\label{quad:agente-recebeu}
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{5.6cm}>{\raggedright\arraybackslash}p{5.6cm}}
+\toprule
+\textbf{Fornecido} & \textbf{Não fornecido} \\
+\midrule
+As quatro fórmulas do Power Apps, com uma breve descrição de cada regra & Os resultados esperados \\
+Os três arquivos de dados inventados & O código e os testes da primeira conversão \\
+Um pedido escrito & Os capítulos deste trabalho \\
+\bottomrule
+\end{tabular}
+\\[2pt]
+\footnotesize Fonte: elaborado pela autora.
+\end{table}
+
+O pedido foi redigido de forma objetiva e armazenado em arquivo. Ele solicitava a conversão das regras para Python, com cada regra implementada em uma função e os valores monetários representados pelo tipo Decimal. Esse tipo realiza cálculos com valores em reais sem os erros de arredondamento do número comum. O pedido também orientava que, diante de uma ambiguidade na fórmula, o agente não deveria supor o comportamento, e sim registrar a dúvida em um arquivo. Por fim, determinava que o trabalho fosse restrito à pasta fornecida. A Figura~\ref{fig:agente-processo} apresenta o pedido e as ações do agente em seguida.
+
+\begin{figure}[htbp]
+\centering
+\caption{Pedido feito ao agente e ações executadas}
+\label{fig:agente-processo}
+\includegraphics[width=\textwidth]{figuras/agente_processo.png}
+\\[2pt]
+\footnotesize Fonte: elaborado pela autora.
+\end{figure}
+
+Os comandos executados pelo agente foram registrados no histórico da sessão. Foram sete chamadas ao todo: quatro comandos e três escritas de arquivo. Os comandos listaram o conteúdo da pasta, leram as fórmulas e os dados, leram o pedido e verificaram as versões do Python e do pytest. Nenhuma chamada acessou arquivos fora da pasta fornecida. Em particular, o agente não leu os resultados esperados nem os capítulos deste trabalho. As três escritas produziram o código (333 linhas), os testes (246 linhas) e o arquivo de dúvidas (76 linhas). O trabalho foi concluído em cerca de três minutos. A Figura~\ref{fig:agente-resposta} apresenta a resposta final do agente.
+
+\begin{figure}[htbp]
+\centering
+\caption{Resposta final do agente}
+\label{fig:agente-resposta}
+\includegraphics[width=\textwidth]{figuras/agente_resposta.png}
+\\[2pt]
+\footnotesize Fonte: elaborado pela autora.
+\end{figure}
+
+O código resultante contém 20 funções, distribuídas entre as quatro regras. Os 45 testes escritos pelo agente foram aprovados (Apêndice~\ref{ap:pytest}). Os testes foram executados uma única vez pelo agente, e todos foram aprovados na primeira execução, sem necessidade de correção posterior. Como esses testes foram elaborados pelo próprio agente, eles isoladamente não são suficientes para aceitar o código. Por essa razão, a verificação principal foi realizada posteriormente, por meio de um script executado fora da pasta do agente, cujo código e saída foram guardados (Apêndice~\ref{ap:comparacao}). O script comparou o resultado do código novo com os 41 valores esperados descritos na Seção~\ref{sec:esperados}.
+
+O arquivo de dúvidas contém oito itens e três observações. Duas dúvidas alteram valores com os dados inventados. A primeira refere-se à diária nacional, que é multiplicada pela quantidade de pessoas na regra 3, mas não na regra 2. Em consequência, o custo 4 equivale a R\$ 800,00 na regra 2 e entra com R\$ 1.600,00 no total previsto. A segunda refere-se a uma diária excluída: a regra 2 utiliza o valor dessa diária, enquanto a regra 3 a desconsidera. Assim, o custo 5 equivale a R\$ 1.000,00 na regra 2 e entra com R\$ 0,00 no total previsto. As demais dúvidas não alteram valores com esses dados.
 
 \section{A avaliação}
 \label{sec:avaliacao}
 
-A avaliação compara dois resultados: o que o Python calculou e o que o Power Apps mostrou. Para cada um dos 41 valores, o critério é simples: o valor está igual ao esperado ou não está. Se não está, descrevo o motivo. Além disso, registro quantos testes automáticos passaram. São 41 valores e 42 testes porque a regra 01, além dos 14 testes de contagem, tem um teste a mais, que confere se os anos aparecem do maior para o menor.
+A avaliação compara dois resultados: o que o código em Python calculou e o que o aplicativo de teste do Power Apps mostrou. Para cada um dos 41 valores esperados, o critério é simples: o valor calculado é igual ao esperado ou não é. Quando há diferença, ela é descrita e investigada. Para as regras 02, 03 e 04, compara-se também o texto em reais.
 
-Os limites são claros: o resultado vale para quatro regras, com dados inventados, em um único sistema. Ele mostra como a conversão se comportou neste caso, e não que qualquer sistema pode ser convertido assim.
+Os testes automáticos escritos pelo agente complementam essa comparação, mas não a substituem. Como foram elaborados pelo próprio agente, eles mostram que o código se comporta como o agente entendeu a regra, e não que ele coincide com o sistema antigo. Por isso, a comparação com os valores esperados é a verificação principal.
+
+As dúvidas registradas pelo agente compõem a parte qualitativa da avaliação. Elas indicam os pontos em que a fórmula não permitia saber o comportamento correto e que o resultado dos testes, isoladamente, não revelaria.
+
+Os limites são claros: os resultados valem para quatro regras, com dados inventados, em um único sistema. Eles mostram como a conversão se comportou neste caso, e não que qualquer sistema possa ser convertido da mesma forma. A qualidade do código, como desempenho ou organização, não é avaliada.
